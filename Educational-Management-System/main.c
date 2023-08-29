@@ -275,32 +275,33 @@ void loopMenu(CourseNode* courseNode, StudentNode* studentNode) {
 }
 
 int main() {
+    // Create data
     Teacher* teacher1 = createTeacher("T001", "123456");
     Teacher* teacher2 = createTeacher("T002", "123456");
-
     Student* student1 = createStudent("S001", "Tom", "12345678901", "123456");
     Student* student2 = createStudent("S002", "Jerry", "12345678902", "123456");
-
     Course* course1 = createCourse("C001", "Computer Science", 4, teacher1, "Monday 10:00", "Room 101");
     Course* course2 = createCourse("C002", "Data Structures", 3, teacher2, "Tuesday 14:00", "Room 102");
 
+    // Create nodes
     StudentNode* studentNode1 = createStudentNode(student1);
     StudentNode* studentNode2 = createStudentNode(student2);
-
     CourseNode* courseNode1 = createCourseNode(course1);
     CourseNode* courseNode2 = createCourseNode(course2);
-
     CourseStudentNode* courseStudentNode1 = createCourseStudentNode(student1);
     CourseStudentNode* courseStudentNode2 = createCourseStudentNode(student2);
 
+    // Build the course tree
     CourseNode* root = NULL;
     root = addCourseNode(root, courseNode1);
     root = addCourseNode(root, courseNode2);
 
+    // Build the student linked list
     StudentNode* studentNode = NULL;
     studentNode = addStudentNode(studentNode, studentNode1);
 	studentNode = addStudentNode(studentNode, studentNode2);
 
+    // Add students to courses
     addCourseStudentNode(courseNode1, courseStudentNode1);
     addCourseStudentNode(courseNode1, courseStudentNode2);
 
