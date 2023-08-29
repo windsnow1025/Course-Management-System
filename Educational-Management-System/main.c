@@ -29,7 +29,7 @@ typedef struct Course {
     Teacher* teacher;
     char time[20];
     char location[20];
-    StudentNode* students;
+    StudentNode* studentNode;
 } Course;
 
 typedef struct CourseNode {
@@ -62,7 +62,7 @@ Course* createCourse(char* id, char* name, int credit, Teacher* teacher, char* t
     course->teacher = teacher;
     strcpy(course->time, time);
     strcpy(course->location, location);
-    course->students = NULL;
+    course->studentNode = NULL;
     return course;
 }
 
@@ -100,11 +100,11 @@ void addStudentToCourseNode(CourseNode* courseNode, StudentNode* studentNode) {
     if (courseNode == NULL) {
         return;
     }
-    if (courseNode->data->students == NULL) {
-        courseNode->data->students = studentNode;
+    if (courseNode->data->studentNode == NULL) {
+        courseNode->data->studentNode = studentNode;
         return;
     }
-    StudentNode* currStudent = courseNode->data->students;
+    StudentNode* currStudent = courseNode->data->studentNode;
     while (currStudent->next != NULL) {
         currStudent = currStudent->next;
     }
@@ -132,7 +132,7 @@ void modifyStudentScore(CourseNode* courseNode, char* studentId, int newScore) {
         printf("Course not found.\n");
         return;
     }
-    StudentNode* student = courseNode->data->students;
+    StudentNode* student = courseNode->data->studentNode;
     while (student != NULL) {
         if (strcmp(student->data->id, studentId) == 0) {
             student->score = newScore;
@@ -156,7 +156,7 @@ void printCourse(CourseNode* courseNode) {
     printf("Course Time: %s\n", courseNode->data->time);
     printf("Course Location: %s\n", courseNode->data->location);
     printf("Students:\n");
-    StudentNode* student = courseNode->data->students;
+    StudentNode* student = courseNode->data->studentNode;
     while (student != NULL) {
         printf("Student ID: %s, Score: %d\n", student->data->id, student->score);
         student = student->next;
