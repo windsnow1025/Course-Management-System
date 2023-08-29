@@ -38,40 +38,48 @@ typedef struct CourseNode {
     struct CourseNode* right;
 } CourseNode;
 
-CourseNode* createCourse(char* id, char* name, int credit, Teacher teacher, char* time, char* location) {
-    CourseNode* node = (CourseNode*)malloc(sizeof(CourseNode));
-    strcpy(node->data.id, id);
-    strcpy(node->data.name, name);
-    node->data.credit = credit;
-    node->data.teacher = teacher;
-    strcpy(node->data.time, time);
-    strcpy(node->data.location, location);
-    node->data.students = NULL;
-    node->left = NULL;
-    node->right = NULL;
-    return node;
+CourseNode* createCourseNode(Course course) {
+	CourseNode* node = (CourseNode*)malloc(sizeof(CourseNode));
+	node->data = course;
+	node->left = NULL;
+	node->right = NULL;
+	return node;
 }
 
-CourseNode* insertCourse(CourseNode* root, CourseNode* node) {
+StudentNode* createStudentNode(Student student) {
+    StudentNode *node = (StudentNode*)malloc(sizeof(StudentNode));
+    node->data = student;
+    node->score = -1;
+    node->next = NULL;
+}
+
+CourseNode* insertCourseNode(CourseNode* root, CourseNode* node) {
     if (root == NULL) {
         return node;
     }
     int cmp = strcmp(node->data.id, root->data.id);
     if (cmp < 0) {
-        root->left = insertCourse(root->left, node);
+        root->left = insertCourseNode(root->left, node);
     }
     else if (cmp > 0) {
-        root->right = insertCourse(root->right, node);
+        root->right = insertCourseNode(root->right, node);
     }
     return root;
 }
 
-void addStudent(CourseNode* course, Student student, int score) {
-    StudentNode* node = (StudentNode*)malloc(sizeof(StudentNode));
-    node->data = student;
-    node->score = score;
-    node->next = course->data.students;
-    course->data.students = node;
+void addStudentToCourseNode(CourseNode* courseNode, StudentNode* studentNode) {
+    if (courseNode == NULL) {
+		return;
+	}
+    if (courseNode->data.students == NULL) {
+		courseNode->data.students = studentNode;
+		return;
+	}
+	StudentNode* currStudent = courseNode->data.students;
+    while (currStudent->next != NULL) {
+        currStudent = currStudent->next;
+	}
+    currStudent->next = studentNode;
 }
 
 CourseNode* searchCourse(CourseNode* root, char* id) {
@@ -88,19 +96,36 @@ CourseNode* searchCourse(CourseNode* root, char* id) {
     }
 }
 
-void printCourse(CourseNode* course) {
-    if (course == NULL) {
+void modifyStudentScore(CourseNode* courseNode, char* studentId, int newScore) {
+    if (courseNode == NULL) {
         printf("Course not found.\n");
         return;
     }
-    printf("Course ID: %s\n", course->data.id);
-    printf("Course Name: %s\n", course->data.name);
-    printf("Course Credit: %d\n", course->data.credit);
-    printf("Course Teacher: %s\n", course->data.teacher.id);
-    printf("Course Time: %s\n", course->data.time);
-    printf("Course Location: %s\n", course->data.location);
+    StudentNode* student = courseNode->data.students;
+    while (student != NULL) {
+        if (strcmp(student->data.id, studentId) == 0) {
+            student->score = newScore;
+            printf("Score of student %s in course %s has been modified to %d.\n", studentId, courseNode->data.id, newScore);
+            return;
+        }
+        student = student->next;
+    }
+    printf("Student not found in this course.\n");
+}
+
+void printCourse(CourseNode* courseNode) {
+    if (courseNode == NULL) {
+        printf("Course not found.\n");
+        return;
+    }
+    printf("Course ID: %s\n", courseNode->data.id);
+    printf("Course Name: %s\n", courseNode->data.name);
+    printf("Course Credit: %d\n", courseNode->data.credit);
+    printf("Course Teacher: %s\n", courseNode->data.teacher.id);
+    printf("Course Time: %s\n", courseNode->data.time);
+    printf("Course Location: %s\n", courseNode->data.location);
     printf("Students:\n");
-    StudentNode* student = course->data.students;
+    StudentNode* student = courseNode->data.students;
     while (student != NULL) {
         printf("Student ID: %s, Score: %d\n", student->data.id, student->score);
         student = student->next;
@@ -116,16 +141,23 @@ int main() {
     Teacher teacher2 = { "T002", "123456" };
     Student student1 = { "S001", "Tom", "12345678901", "123456" };
     Student student2 = { "S002", "Jerry", "12345678902", "123456" };
+    Course course1 = { "C001", "Computer Science", 4, teacher1, "Monday 10:00", "Room 101" };
+    Course course2 = { "C002", "Data Structures", 3, teacher2, "Tuesday 14:00", "Room 102" };
 
-    CourseNode* course1 = createCourse("C001", "Computer Science", 4, teacher1, "Monday 10:00", "Room 101");
-    CourseNode* course2 = createCourse("C002", "Data Structures", 3, teacher2, "Tuesday 14:00", "Room 102");
-    
-    addStudent(course1, student1, 90);
-    addStudent(course1, student2, 85);
+    StudentNode* studentNode1 = createStudentNode(student1);
+    StudentNode* studentNode2 = createStudentNode(student2);
+    CourseNode* courseNode1 = createCourseNode(course1);
+    CourseNode* courseNode2 = createCourseNode(course2);
 
     CourseNode* root = NULL;
-    root = insertCourse(root, course1);
-    root = insertCourse(root, course2);
+    root = insertCourseNode(root, courseNode1);
+    root = insertCourseNode(root, courseNode2);
+    
+    addStudentToCourseNode(courseNode1, studentNode1);
+    addStudentToCourseNode(courseNode1, studentNode2);
+
+    modifyStudentScore(courseNode1, "S001", 90);
+    modifyStudentScore(courseNode1, "S002", 80);
 
     printf("Search and print course C001:\n");
     printCourse(searchCourse(root, "C001"));
