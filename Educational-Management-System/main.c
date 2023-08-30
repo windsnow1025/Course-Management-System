@@ -301,6 +301,7 @@ void studentMenu(Student* student, CourseNode* root) {
     char courseId[20];
     CourseNode* courseNode;
     while (1) {
+        system("cls");
         printf("1. Query Course Information\n");
         printf("2. Register for a Course\n");
         printf("3. Cancel Course Registration\n");
@@ -373,6 +374,7 @@ void teacherMenu(Teacher* teacher, CourseNode* root) {
     int newScore;
     CourseNode* courseNode;
     while (1) {
+        system("cls");
         printf("1. Query My Course Information\n");
         printf("2. Query My Students Information\n");
         printf("3. Input Course Score\n");
@@ -458,6 +460,7 @@ void loginMenu(CourseNode* courseNode, StudentNode* studentNode) {
     Student* student;
     Teacher* teacher;
     while (1) {
+        system("cls");
         printf("1. Student Login\n");
         printf("2. Teacher Login\n");
         printf("3. Exit\n");
