@@ -366,6 +366,93 @@ void studentMenu(Student* student, CourseNode* root) {
     }
 }
 
+void teacherMenu(Teacher* teacher, CourseNode* root) {
+    int choice;
+    char courseId[20];
+    char studentId[20];
+    int newScore;
+    CourseNode* courseNode;
+    while (1) {
+        printf("1. Query My Course Information\n");
+        printf("2. Query My Students Information\n");
+        printf("3. Input Course Score\n");
+        printf("4. Modify Course Score\n");
+        printf("5. Statistics of Course Score\n");
+        printf("6. Logout\n");
+        printf("Please enter your choice: ");
+        scanf("%d", &choice);
+        switch (choice) {
+        case 1:
+            printf("Please enter the course ID: ");
+            scanf("%s", courseId);
+            courseNode = searchCourse(root, courseId);
+            if (courseNode != NULL && strcmp(courseNode->data->teacher->id, teacher->id) == 0) {
+                printCourse(courseNode);
+            }
+            else {
+                printf("Course not found or you are not the teacher of this course.\n");
+            }
+            break;
+        case 2:
+            printf("Please enter the course ID: ");
+            scanf("%s", courseId);
+            courseNode = searchCourse(root, courseId);
+            if (courseNode != NULL && strcmp(courseNode->data->teacher->id, teacher->id) == 0) {
+                printCourse(courseNode);
+            }
+            else {
+                printf("Course not found or you are not the teacher of this course.\n");
+            }
+            break;
+        case 3:
+            printf("Please enter the course ID: ");
+            scanf("%s", courseId);
+            printf("Please enter the student ID: ");
+            scanf("%s", studentId);
+            printf("Please enter the new score: ");
+            scanf("%d", &newScore);
+            courseNode = searchCourse(root, courseId);
+            if (courseNode != NULL && strcmp(courseNode->data->teacher->id, teacher->id) == 0) {
+                modifyStudentScore(courseNode, studentId, newScore);
+            }
+            else {
+                printf("Course not found or you are not the teacher of this course.\n");
+            }
+            break;
+        case 4:
+            printf("Please enter the course ID: ");
+            scanf("%s", courseId);
+            printf("Please enter the student ID: ");
+            scanf("%s", studentId);
+            printf("Please enter the new score: ");
+            scanf("%d", &newScore);
+            courseNode = searchCourse(root, courseId);
+            if (courseNode != NULL && strcmp(courseNode->data->teacher->id, teacher->id) == 0) {
+                modifyStudentScore(courseNode, studentId, newScore);
+            }
+            else {
+                printf("Course not found or you are not the teacher of this course.\n");
+            }
+            break;
+        case 5:
+            printf("Please enter the course ID: ");
+            scanf("%s", courseId);
+            courseNode = searchCourse(root, courseId);
+            if (courseNode != NULL && strcmp(courseNode->data->teacher->id, teacher->id) == 0) {
+                // Enter the function of statistics of course score
+            }
+            else {
+                printf("Course not found or you are not the teacher of this course.\n");
+            }
+            break;
+        case 6:
+            return;
+        default:
+            printf("Invalid choice. Please try again.\n");
+        }
+    }
+}
+
 void loginMenu(CourseNode* courseNode, StudentNode* studentNode) {
     int choice;
     Student* student;
@@ -388,7 +475,7 @@ void loginMenu(CourseNode* courseNode, StudentNode* studentNode) {
             teacher = teacherLogin(courseNode);
             if (teacher != NULL) {
                 printf("User ID: %s\n", teacher->id);
-                // Enter teacher menu
+                teacherMenu(teacher, courseNode);
             }
             break;
         case 3:
