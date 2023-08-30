@@ -130,10 +130,18 @@ void addCourseStudentNode(CourseNode* courseNode, Student* student) {
         return;
     }
     CourseStudentNode* currStudent = courseNode->data->studentNode;
-    while (currStudent->next != NULL) {
+    while (currStudent != NULL) {
+        if (strcmp(currStudent->data->id, student->id) == 0) {
+            printf("Student already exists in this course.\n");
+            free(courseStudentNode);
+            return;
+        }
+        if (currStudent->next == NULL) {
+            currStudent->next = courseStudentNode;
+            return;
+        }
         currStudent = currStudent->next;
     }
-    currStudent->next = courseStudentNode;
 }
 
 void delCourseStudentNode(CourseNode* courseNode, char* studentId) {
@@ -151,7 +159,7 @@ void delCourseStudentNode(CourseNode* courseNode, char* studentId) {
             else {
                 prevStudent->next = currStudent->next;
             }
-            // free(currStudent);
+            free(currStudent);
             printf("Course registration cancelled successfully.\n");
             return;
         }
@@ -229,7 +237,7 @@ void printCourse(CourseNode* courseNode) {
         printf("Course not found.\n");
         return;
     }
-    printf("---------------------\n");
+    printf("------------------------------------------\n");
     printf("Course ID: %s\n", courseNode->data->id);
     printf("Course Name: %s\n", courseNode->data->name);
     printf("Course Credit: %d\n", courseNode->data->credit);
@@ -237,12 +245,12 @@ void printCourse(CourseNode* courseNode) {
     printf("Course Time: %s\n", courseNode->data->time);
     printf("Course Location: %s\n", courseNode->data->location);
     printf("Students:\n");
-    printf("---------------------\n");
     CourseStudentNode* student = courseNode->data->studentNode;
     while (student != NULL) {
         printf("Student ID: %s, Score: %d\n", student->data->id, student->score);
         student = student->next;
     }
+    printf("------------------------------------------\n\n");
 }
 
 void printCourses(CourseNode* root) {
@@ -318,8 +326,7 @@ void studentMenu(Student* student, CourseNode* root) {
             scanf("%s", courseId);
             courseNode = searchCourse(root, courseId);
             if (courseNode != NULL) {
-                CourseStudentNode* courseStudentNode = createCourseStudentNode(student);
-                addCourseStudentNode(courseNode, courseStudentNode);
+                addCourseStudentNode(courseNode, student);
                 printf("Course registration successful.\n");
             }
             else {
