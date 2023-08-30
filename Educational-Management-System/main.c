@@ -201,6 +201,20 @@ CourseNode* searchCourse(CourseNode* root, char* id) {
     }
 }
 
+CourseNode* searchCourseByTeacherId(CourseNode* root, char* teacherId) {
+    if (root == NULL) {
+        return NULL;
+    }
+    if (strcmp(root->data->teacher->id, teacherId) == 0) {
+        return root;
+    }
+    CourseNode* courseNode = searchCourseByTeacherId(root->left, teacherId);
+    if (courseNode != NULL) {
+        return courseNode;
+    }
+    return searchCourseByTeacherId(root->right, teacherId);
+}
+
 Teacher* searchTeacherInCourse(CourseNode* root, char* id, char* password) {
     if (root == NULL) {
         return NULL;
@@ -260,6 +274,48 @@ void printCourses(CourseNode* root) {
 	printCourses(root->left);
 	printCourse(root);
 	printCourses(root->right);
+}
+
+void printCourseStudents(CourseNode* courseNode) {
+    if (courseNode == NULL) {
+        printf("Course not found.\n");
+        return;
+    }
+    printf("Students in course %s:\n", courseNode->data->id);
+    CourseStudentNode* student = courseNode->data->studentNode;
+    while (student != NULL) {
+        printf("Student ID: %s\n", student->data->id);
+        student = student->next;
+    }
+}
+
+void printCourseScoreStatistics(CourseNode* courseNode) {
+    if (courseNode == NULL) {
+        printf("Course not found.\n");
+        return;
+    }
+    int count90 = 0, count80 = 0, count60 = 0, countBelow60 = 0;
+    CourseStudentNode* student = courseNode->data->studentNode;
+    while (student != NULL) {
+        if (student->score >= 90) {
+            count90++;
+        }
+        else if (student->score >= 80) {
+            count80++;
+        }
+        else if (student->score >= 60) {
+            count60++;
+        }
+        else {
+            countBelow60++;
+        }
+        student = student->next;
+    }
+    printf("Statistics of course %s:\n", courseNode->data->id);
+    printf("90 and above: %d\n", count90);
+    printf("80 to 89: %d\n", count80);
+    printf("60 to 79: %d\n", count60);
+    printf("Below 60: %d\n", countBelow60);
 }
 
 Student* studentLogin(StudentNode* studentNode) {
@@ -364,6 +420,7 @@ void studentMenu(Student* student, CourseNode* root) {
         default:
             printf("Invalid choice. Please try again.\n");
         }
+        system("pause");
     }
 }
 
@@ -372,7 +429,7 @@ void teacherMenu(Teacher* teacher, CourseNode* root) {
     char courseId[20];
     char studentId[20];
     int newScore;
-    CourseNode* courseNode;
+    CourseNode* courseNode = searchCourseByTeacherId(root, teacher->id);
     while (1) {
         system("cls");
         printf("1. Query My Course Information\n");
@@ -385,73 +442,34 @@ void teacherMenu(Teacher* teacher, CourseNode* root) {
         scanf("%d", &choice);
         switch (choice) {
         case 1:
-            printf("Please enter the course ID: ");
-            scanf("%s", courseId);
-            courseNode = searchCourse(root, courseId);
-            if (courseNode != NULL && strcmp(courseNode->data->teacher->id, teacher->id) == 0) {
-                printCourse(courseNode);
-            }
-            else {
-                printf("Course not found or you are not the teacher of this course.\n");
-            }
+            printCourse(courseNode);
             break;
         case 2:
-            printf("Please enter the course ID: ");
-            scanf("%s", courseId);
-            courseNode = searchCourse(root, courseId);
-            if (courseNode != NULL && strcmp(courseNode->data->teacher->id, teacher->id) == 0) {
-                printCourse(courseNode);
-            }
-            else {
-                printf("Course not found or you are not the teacher of this course.\n");
-            }
+            printCourseStudents(courseNode);
             break;
         case 3:
-            printf("Please enter the course ID: ");
-            scanf("%s", courseId);
             printf("Please enter the student ID: ");
             scanf("%s", studentId);
             printf("Please enter the new score: ");
             scanf("%d", &newScore);
-            courseNode = searchCourse(root, courseId);
-            if (courseNode != NULL && strcmp(courseNode->data->teacher->id, teacher->id) == 0) {
-                modifyStudentScore(courseNode, studentId, newScore);
-            }
-            else {
-                printf("Course not found or you are not the teacher of this course.\n");
-            }
+            modifyStudentScore(courseNode, studentId, newScore);
             break;
         case 4:
-            printf("Please enter the course ID: ");
-            scanf("%s", courseId);
             printf("Please enter the student ID: ");
             scanf("%s", studentId);
             printf("Please enter the new score: ");
             scanf("%d", &newScore);
-            courseNode = searchCourse(root, courseId);
-            if (courseNode != NULL && strcmp(courseNode->data->teacher->id, teacher->id) == 0) {
-                modifyStudentScore(courseNode, studentId, newScore);
-            }
-            else {
-                printf("Course not found or you are not the teacher of this course.\n");
-            }
+            modifyStudentScore(courseNode, studentId, newScore);
             break;
         case 5:
-            printf("Please enter the course ID: ");
-            scanf("%s", courseId);
-            courseNode = searchCourse(root, courseId);
-            if (courseNode != NULL && strcmp(courseNode->data->teacher->id, teacher->id) == 0) {
-                // Enter the function of statistics of course score
-            }
-            else {
-                printf("Course not found or you are not the teacher of this course.\n");
-            }
+            printCourseScoreStatistics(courseNode);
             break;
         case 6:
             return;
         default:
             printf("Invalid choice. Please try again.\n");
         }
+        system("pause");
     }
 }
 
@@ -486,6 +504,7 @@ void loginMenu(CourseNode* courseNode, StudentNode* studentNode) {
         default:
             printf("Invalid choice. Please try again.\n");
         }
+        system("pause");
     }
 }
 
