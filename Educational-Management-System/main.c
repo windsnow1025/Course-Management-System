@@ -610,10 +610,13 @@ void adminMenu(CourseNode** root) {
                 scanf("%s", teacherId);
                 printf("Please enter the new teacher password: ");
                 scanf("%s", teacherPassword);
+                while ((getchar()) != '\n');
                 printf("Please enter the new course time: ");
-                scanf("%s", courseTime);
+                fgets(courseTime, sizeof(courseTime), stdin);
+                courseTime[strcspn(courseTime, "\n")] = 0;
                 printf("Please enter the new course location: ");
-                scanf("%s", courseLocation);
+                fgets(courseLocation, sizeof(courseLocation), stdin);
+                courseLocation[strcspn(courseLocation, "\n")] = 0;
                 strcpy(courseNode->data->name, courseName);
                 courseNode->data->credit = courseCredit;
                 strcpy(courseNode->data->teacher->id, teacherId);
