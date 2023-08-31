@@ -95,15 +95,15 @@ CourseStudentNode* createCourseStudentNode(Student* student) {
 }
 
 StudentNode* addStudentNode(StudentNode* head, StudentNode* node) {
-	if (head == NULL) {
-		return node;
-	}
-	StudentNode* curr = head;
-	while (curr->next != NULL) {
-		curr = curr->next;
-	}
-	curr->next = node;
-	return head;
+    if (head == NULL) {
+        return node;
+    }
+    StudentNode* curr = head;
+    while (curr->next != NULL) {
+        curr = curr->next;
+    }
+    curr->next = node;
+    return head;
 }
 
 CourseNode* addCourseNode(CourseNode* root, CourseNode* node) {
@@ -118,6 +118,60 @@ CourseNode* addCourseNode(CourseNode* root, CourseNode* node) {
         root->right = addCourseNode(root->right, node);
     }
     return root;
+}
+
+CourseNode* minValueNode(CourseNode* node) {
+    CourseNode* current = node;
+    while (current && current->left != NULL) {
+        current = current->left;
+    }
+    return current;
+}
+
+CourseNode* deleteCourseNode(CourseNode* root, char* id) {
+    if (root == NULL) {
+        return NULL;
+    }
+    int cmp = strcmp(id, root->data->id);
+    if (cmp < 0) {
+        root->left = deleteCourseNode(root->left, id);
+    }
+    else if (cmp > 0) {
+        root->right = deleteCourseNode(root->right, id);
+    }
+    else {
+        if (root->left == NULL) {
+            CourseNode* temp = root->right;
+            free(root);
+            return temp;
+        }
+        else if (root->right == NULL) {
+            CourseNode* temp = root->left;
+            free(root);
+            return temp;
+        }
+        CourseNode* temp = minValueNode(root->right);
+        root->data = temp->data;
+        root->right = deleteCourseNode(root->right, temp->data->id);
+    }
+    return root;
+}
+
+int countCourses(CourseNode* root) {
+    if (root == NULL) {
+        return 0;
+    }
+    return 1 + countCourses(root->left) + countCourses(root->right);
+}
+
+int countCourseStudents(CourseNode* courseNode) {
+    int count = 0;
+    CourseStudentNode* student = courseNode->data->studentNode;
+    while (student != NULL) {
+        count++;
+        student = student->next;
+    }
+    return count;
 }
 
 void addCourseStudentNode(CourseNode* courseNode, Student* student) {
@@ -268,12 +322,12 @@ void printCourse(CourseNode* courseNode) {
 }
 
 void printCourses(CourseNode* root) {
-	if (root == NULL) {
-		return;
-	}
-	printCourses(root->left);
-	printCourse(root);
-	printCourses(root->right);
+    if (root == NULL) {
+        return;
+    }
+    printCourses(root->left);
+    printCourse(root);
+    printCourses(root->right);
 }
 
 void printCourseStudents(CourseNode* courseNode) {
@@ -350,6 +404,21 @@ Teacher* teacherLogin(CourseNode* root) {
     }
     printf("Login failed.\n");
     return NULL;
+}
+
+int adminLogin() {
+    char username[20];
+    char password[20];
+    printf("Please enter your username: ");
+    scanf("%s", username);
+    printf("Please enter your password: ");
+    scanf("%s", password);
+    if (strcmp(username, "admin") == 0 && strcmp(password, "admin") == 0) {
+        printf("Login successful.\n");
+        return 1;
+    }
+    printf("Login failed.\n");
+    return 0;
 }
 
 void studentMenu(Student* student, CourseNode* root) {
@@ -473,15 +542,124 @@ void teacherMenu(Teacher* teacher, CourseNode* root) {
     }
 }
 
+void adminMenu(CourseNode** root) {
+    int choice;
+    char courseId[20];
+    char courseName[20];
+    int courseCredit;
+    char teacherId[20];
+    char teacherPassword[20];
+    char courseTime[20];
+    char courseLocation[20];
+    CourseNode* courseNode;
+    while (1) {
+        system("cls");
+        printf("1. Create Course Information\n");
+        printf("2. Add Course Information\n");
+        printf("3. Delete Course Information\n");
+        printf("4. Count Total Courses\n");
+        printf("5. Query Course Student Count\n");
+        printf("6. Browse All Course Information\n");
+        printf("7. Logout\n");
+        printf("Please enter your choice: ");
+        scanf("%d", &choice);
+        switch (choice) {
+        case 1:
+            printf("Please enter the course ID: ");
+            scanf("%s", courseId);
+            printf("Please enter the course name: ");
+            scanf("%s", courseName);
+            printf("Please enter the course credit: ");
+            scanf("%d", &courseCredit);
+            printf("Please enter the teacher ID: ");
+            scanf("%s", teacherId);
+            printf("Please enter the teacher password: ");
+            scanf("%s", teacherPassword);
+            while ((getchar()) != '\n');
+            printf("Please enter the course time: ");
+            fgets(courseTime, sizeof(courseTime), stdin);
+            courseTime[strcspn(courseTime, "\n")] = 0;
+            printf("Please enter the course location: ");
+            fgets(courseLocation, sizeof(courseLocation), stdin);
+            courseLocation[strcspn(courseLocation, "\n")] = 0;
+            Teacher* teacher = createTeacher(teacherId, teacherPassword);
+            Course* course = createCourse(courseId, courseName, courseCredit, teacher, courseTime, courseLocation);
+            CourseNode* courseNode = createCourseNode(course);
+            *root = addCourseNode(*root, courseNode);
+            printf("Course created successfully.\n");
+            break;
+        case 2:
+            printf("Please enter the course ID: ");
+            scanf("%s", courseId);
+            courseNode = searchCourse(*root, courseId);
+            if (courseNode != NULL) {
+                printf("Please enter the new course name: ");
+                scanf("%s", courseName);
+                printf("Please enter the new course credit: ");
+                scanf("%d", &courseCredit);
+                printf("Please enter the new teacher ID: ");
+                scanf("%s", teacherId);
+                printf("Please enter the new teacher password: ");
+                scanf("%s", teacherPassword);
+                printf("Please enter the new course time: ");
+                scanf("%s", courseTime);
+                printf("Please enter the new course location: ");
+                scanf("%s", courseLocation);
+                strcpy(courseNode->data->name, courseName);
+                courseNode->data->credit = courseCredit;
+                strcpy(courseNode->data->teacher->id, teacherId);
+                strcpy(courseNode->data->teacher->password, teacherPassword);
+                strcpy(courseNode->data->time, courseTime);
+                strcpy(courseNode->data->location, courseLocation);
+                printf("Course information updated successfully.\n");
+            }
+            else {
+                printf("Course not found.\n");
+            }
+            break;
+        case 3:
+            printf("Please enter the course ID: ");
+            scanf("%s", courseId);
+            *root = deleteCourseNode(*root, courseId);
+            printf("Course deleted successfully.\n");
+            break;
+        case 4:
+            printf("Total number of courses: %d\n", countCourses(*root));
+            break;
+        case 5:
+            printf("Please enter the course ID: ");
+            scanf("%s", courseId);
+            courseNode = searchCourse(*root, courseId);
+            if (courseNode != NULL) {
+                printf("Number of students in course %s: %d\n", courseId, countCourseStudents(courseNode));
+            }
+            else {
+                printf("Course not found.\n");
+            }
+            break;
+        case 6:
+            printCourses(*root);
+            break;
+        case 7:
+            return;
+        default:
+            printf("Invalid choice. Please try again.\n");
+        }
+        system("pause");
+    }
+}
+
 void loginMenu(CourseNode* courseNode, StudentNode* studentNode) {
     int choice;
     Student* student;
     Teacher* teacher;
+    int admin;
     while (1) {
         system("cls");
         printf("1. Student Login\n");
         printf("2. Teacher Login\n");
-        printf("3. Exit\n");
+        printf("3. Admin Login\n");
+        printf("4. Exit\n");
         printf("Please enter your choice: ");
         scanf("%d", &choice);
         switch (choice) {
@@ -500,7 +678,13 @@ void loginMenu(CourseNode* courseNode, StudentNode* studentNode) {
             }
             break;
         case 3:
-            exit(0);
+            admin = adminLogin();
+            if (admin) {
+                adminMenu(&courseNode);
+            }
+            break;
+        case 4:
+            return;
         default:
             printf("Invalid choice. Please try again.\n");
         }
@@ -533,12 +717,12 @@ int main() {
     // Build the student linked list
     StudentNode* studentNode = NULL;
     studentNode = addStudentNode(studentNode, studentNode1);
-	studentNode = addStudentNode(studentNode, studentNode2);
+    studentNode = addStudentNode(studentNode, studentNode2);
     studentNode = addStudentNode(studentNode, studentNode3);
 
     // Add students to courses
     addCourseStudentNode(courseNode1, student1);
-	addCourseStudentNode(courseNode1, student2);
+    addCourseStudentNode(courseNode1, student2);
     addCourseStudentNode(courseNode2, student1);
     addCourseStudentNode(courseNode2, student3);
 
