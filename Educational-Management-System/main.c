@@ -163,9 +163,11 @@ CourseNode* minValueNode(CourseNode* node) {
     return current;
 }
 
+// TO BE FIXED
 void deleteCourseNode(CourseNode** rootPtr, char* id) {
     CourseNode* root = *rootPtr;
     if (root == NULL) {
+        printf("Course not found.\n");
         return;
     }
     int cmp = strcmp(id, root->data->id);
@@ -189,6 +191,7 @@ void deleteCourseNode(CourseNode** rootPtr, char* id) {
             root->data = temp->data;
             deleteCourseNode(&(root->right), temp->data->id);
         }
+        printf("Course deleted successfully.\n");
     }
 }
 
@@ -360,6 +363,23 @@ void printCourseStudents(CourseNode* courseNode) {
     }
 }
 
+void printCourseIds(CourseNode* root) {
+    if (root == NULL) {
+        return;
+    }
+    printCourseIds(root->left);
+    printf("Course ID: %s\n", root->data->id);
+    printCourseIds(root->right);
+}
+
+void printStudentIds(CourseStudentNode* head) {
+    CourseStudentNode* curr = head;
+    while (curr != NULL) {
+        printf("Student ID: %s\n", curr->data->id);
+        curr = curr->next;
+    }
+}
+
 void printCourseScoreStatistics(CourseNode* courseNode) {
     if (courseNode == NULL) {
         printf("Course not found.\n");
@@ -459,6 +479,8 @@ void studentMenu(Student* student, CourseNode* root) {
         scanf("%d", &choice);
         switch (choice) {
         case 1:
+            printf("Available courses:\n");
+            printCourseIds(root);
             printf("Please enter the course ID: ");
             scanf("%s", courseId);
             courseNode = searchCourse(root, courseId);
@@ -470,6 +492,8 @@ void studentMenu(Student* student, CourseNode* root) {
             }
             break;
         case 2:
+            printf("Available courses:\n");
+            printCourseIds(root);
             printf("Please enter the course ID: ");
             scanf("%s", courseId);
             courseNode = searchCourse(root, courseId);
@@ -482,6 +506,8 @@ void studentMenu(Student* student, CourseNode* root) {
             }
             break;
         case 3:
+            printf("Available courses:\n");
+            printCourseIds(root);
             printf("Please enter the course ID: ");
             scanf("%s", courseId);
             courseNode = searchCourse(root, courseId);
@@ -493,6 +519,8 @@ void studentMenu(Student* student, CourseNode* root) {
             }
             break;
         case 4:
+            printf("Available courses:\n");
+            printCourseIds(root);
             printf("Please enter the course ID: ");
             scanf("%s", courseId);
             courseNode = searchCourse(root, courseId);
@@ -546,6 +574,8 @@ void teacherMenu(Teacher* teacher, CourseNode* root) {
             printCourseStudents(courseNode);
             break;
         case 3:
+            printf("Available students:\n");
+            printStudentIds(courseNode->data->studentNode);
             printf("Please enter the student ID: ");
             scanf("%s", studentId);
             currentScore = queryCourseScore(courseNode, studentId);
@@ -562,6 +592,8 @@ void teacherMenu(Teacher* teacher, CourseNode* root) {
             }
             break;
         case 4:
+            printf("Available students:\n");
+            printStudentIds(courseNode->data->studentNode);
             printf("Please enter the student ID: ");
             scanf("%s", studentId);
             currentScore = queryCourseScore(courseNode, studentId);
@@ -589,7 +621,8 @@ void teacherMenu(Teacher* teacher, CourseNode* root) {
     }
 }
 
-void adminMenu(CourseNode** root) {
+void adminMenu(CourseNode** rootPtr) {
+    CourseNode* root = *rootPtr;
     int choice;
     char courseId[20];
     char courseName[20];
@@ -632,13 +665,13 @@ void adminMenu(CourseNode** root) {
             Teacher* teacher = createTeacher(teacherId, teacherPassword);
             Course* course = createCourse(courseId, courseName, courseCredit, teacher, courseTime, courseLocation);
             CourseNode* courseNode = createCourseNode(course);
-            addCourseNode(root, courseNode);
+            addCourseNode(rootPtr, courseNode);
             printf("Course created successfully.\n");
             break;
         case 2:
             printf("Please enter the course ID: ");
             scanf("%s", courseId);
-            courseNode = searchCourse(*root, courseId);
+            courseNode = searchCourse(root, courseId);
             if (courseNode != NULL) {
                 printf("Please enter the new course name: ");
                 scanf("%s", courseName);
@@ -668,18 +701,21 @@ void adminMenu(CourseNode** root) {
             }
             break;
         case 3:
+            printf("Available courses:\n");
+            printCourseIds(root);
             printf("Please enter the course ID: ");
             scanf("%s", courseId);
-            deleteCourseNode(root, courseId);
-            printf("Course deleted successfully.\n");
+            deleteCourseNode(rootPtr, courseId);
             break;
         case 4:
-            printf("Total number of courses: %d\n", countCourses(*root));
+            printf("Total number of courses: %d\n", countCourses(root));
             break;
         case 5:
+            printf("Available courses:\n");
+            printCourseIds(root);
             printf("Please enter the course ID: ");
             scanf("%s", courseId);
-            courseNode = searchCourse(*root, courseId);
+            courseNode = searchCourse(root, courseId);
             if (courseNode != NULL) {
                 printf("Number of students in course %s: %d\n", courseId, countCourseStudents(courseNode));
             }
@@ -688,7 +724,7 @@ void adminMenu(CourseNode** root) {
             }
             break;
         case 6:
-            printCourses(*root);
+            printCourses(root);
             break;
         case 7:
             return;
