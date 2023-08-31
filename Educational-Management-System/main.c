@@ -360,15 +360,6 @@ void printCourseStudents(CourseNode* courseNode) {
     }
 }
 
-void printAllCourseStudents(CourseNode* root) {
-    if (root == NULL) {
-        return;
-    }
-    printAllCourseStudents(root->left);
-    printf("Number of students in course %s: %d\n", root->data->id, countCourseStudents(root));
-    printAllCourseStudents(root->right);
-}
-
 void printCourseScoreStatistics(CourseNode* courseNode) {
     if (courseNode == NULL) {
         printf("Course not found.\n");
@@ -686,7 +677,15 @@ void adminMenu(CourseNode** root) {
             printf("Total number of courses: %d\n", countCourses(*root));
             break;
         case 5:
-            printAllCourseStudents(*root);
+            printf("Please enter the course ID: ");
+            scanf("%s", courseId);
+            courseNode = searchCourse(*root, courseId);
+            if (courseNode != NULL) {
+                printf("Number of students in course %s: %d\n", courseId, countCourseStudents(courseNode));
+            }
+            else {
+                printf("Course not found.\n");
+            }
             break;
         case 6:
             printCourses(*root);
