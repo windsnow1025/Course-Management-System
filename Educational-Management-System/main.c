@@ -396,8 +396,10 @@ Student* studentLogin(StudentNode* studentNode) {
     char password[20];
     printf("Please enter your student ID: ");
     scanf("%s", id);
+    while ((getchar()) != '\n');
     printf("Please enter your password: ");
     scanf("%s", password);
+    while ((getchar()) != '\n');
     while (studentNode != NULL) {
         if (strcmp(studentNode->data->id, id) == 0 && strcmp(studentNode->data->password, password) == 0) {
             printf("Login successful.\n");
@@ -414,8 +416,10 @@ Teacher* teacherLogin(CourseNode* root) {
     char password[20];
     printf("Please enter your teacher ID: ");
     scanf("%s", id);
+    while ((getchar()) != '\n');
     printf("Please enter your password: ");
     scanf("%s", password);
+    while ((getchar()) != '\n');
     Teacher* teacher = searchTeacherInCourse(root, id, password);
     if (teacher != NULL) {
         printf("Login successful.\n");
@@ -430,8 +434,10 @@ int adminLogin() {
     char password[20];
     printf("Please enter your username: ");
     scanf("%s", username);
+    while ((getchar()) != '\n');
     printf("Please enter your password: ");
     scanf("%s", password);
+    while ((getchar()) != '\n');
     if (strcmp(username, "admin") == 0 && strcmp(password, "admin") == 0) {
         printf("Login successful.\n");
         return 1;
@@ -457,6 +463,10 @@ void studentMenu(Student* student, CourseNode* root) {
         printf("6. Logout\n");
         printf("Please enter your choice: ");
         scanf("%d", &choice);
+<<<<<<< Updated upstream
+=======
+        while ((getchar()) != '\n');
+>>>>>>> Stashed changes
         switch (choice) {
         case 1:
             printf("Please enter the course ID: ");
@@ -538,6 +548,10 @@ void teacherMenu(Teacher* teacher, CourseNode* root) {
         printf("6. Logout\n");
         printf("Please enter your choice: ");
         scanf("%d", &choice);
+<<<<<<< Updated upstream
+=======
+        while ((getchar()) != '\n');
+>>>>>>> Stashed changes
         switch (choice) {
         case 1:
             printCourse(courseNode);
@@ -610,6 +624,10 @@ void adminMenu(CourseNode** root) {
         printf("7. Logout\n");
         printf("Please enter your choice: ");
         scanf("%d", &choice);
+<<<<<<< Updated upstream
+=======
+        while ((getchar()) != '\n');
+>>>>>>> Stashed changes
         switch (choice) {
         case 1:
             printf("Please enter the course ID: ");
@@ -712,6 +730,10 @@ void loginMenu(CourseNode* courseNode, StudentNode* studentNode) {
         printf("4. Exit\n");
         printf("Please enter your choice: ");
         scanf("%d", &choice);
+<<<<<<< Updated upstream
+=======
+        while ((getchar()) != '\n');
+>>>>>>> Stashed changes
         switch (choice) {
         case 1:
             student = studentLogin(studentNode);
