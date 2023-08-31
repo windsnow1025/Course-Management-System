@@ -477,6 +477,7 @@ void studentMenu(Student* student, CourseNode* root) {
         printf("6. Logout\n");
         printf("Please enter your choice: ");
         scanf("%d", &choice);
+        getchar();
         switch (choice) {
         case 1:
             printf("Available courses:\n");
@@ -566,6 +567,7 @@ void teacherMenu(Teacher* teacher, CourseNode* root) {
         printf("6. Logout\n");
         printf("Please enter your choice: ");
         scanf("%d", &choice);
+        getchar();
         switch (choice) {
         case 1:
             printCourse(courseNode);
@@ -643,6 +645,7 @@ void adminMenu(CourseNode** rootPtr) {
         printf("7. Logout\n");
         printf("Please enter your choice: ");
         scanf("%d", &choice);
+        getchar();
         switch (choice) {
         case 1:
             printf("Please enter the course ID: ");
@@ -748,6 +751,7 @@ void loginMenu(CourseNode* courseNode, StudentNode* studentNode) {
         printf("4. Exit\n");
         printf("Please enter your choice: ");
         scanf("%d", &choice);
+        getchar();
         switch (choice) {
         case 1:
             student = studentLogin(studentNode);
