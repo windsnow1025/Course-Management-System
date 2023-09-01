@@ -163,7 +163,6 @@ CourseNode* minValueNode(CourseNode* node) {
     return current;
 }
 
-// TO BE FIXED
 void deleteCourseNode(CourseNode** rootPtr, char* id) {
     CourseNode* root = *rootPtr;
     if (root == NULL) {
@@ -638,6 +637,7 @@ void adminMenu(CourseNode** rootPtr) {
     CourseNode* courseNode;
     while (1) {
         choice = 0;
+        root = *rootPtr;
         system("cls");
         printf("1. Create Course Information\n");
         printf("2. Add Course Information\n");
@@ -790,35 +790,53 @@ int main() {
     // Create data
     Teacher* teacher1 = createTeacher("T001", "123456");
     Teacher* teacher2 = createTeacher("T002", "123456");
+    Teacher* teacher3 = createTeacher("T003", "123456");
+    Teacher* teacher4 = createTeacher("T004", "123456");
     Student* student1 = createStudent("S001", "Tom", "12345678901", "123456");
     Student* student2 = createStudent("S002", "Jerry", "12345678902", "123456");
     Student* student3 = createStudent("S003", "John", "12345678903", "123456");
+    Student* student4 = createStudent("S004", "Alice", "12345678904", "123456");
+    Student* student5 = createStudent("S005", "Bob", "12345678905", "123456");
     Course* course1 = createCourse("C001", "Computer Science", 4, teacher1, "Monday 10:00", "Room 101");
     Course* course2 = createCourse("C002", "Data Structures", 3, teacher2, "Tuesday 14:00", "Room 102");
+    Course* course3 = createCourse("C003", "Operating Systems", 3, teacher3, "Wednesday 10:00", "Room 103");
+    Course* course4 = createCourse("C004", "Networks", 3, teacher4, "Thursday 14:00", "Room 104");
 
     // Create nodes
     StudentNode* studentNode1 = createStudentNode(student1);
     StudentNode* studentNode2 = createStudentNode(student2);
     StudentNode* studentNode3 = createStudentNode(student3);
+    StudentNode* studentNode4 = createStudentNode(student4);
+    StudentNode* studentNode5 = createStudentNode(student5);
     CourseNode* courseNode1 = createCourseNode(course1);
     CourseNode* courseNode2 = createCourseNode(course2);
+    CourseNode* courseNode3 = createCourseNode(course3);
+    CourseNode* courseNode4 = createCourseNode(course4);
 
     // Build the course tree
     CourseNode* root = NULL;
     addCourseNode(&root, courseNode1);
     addCourseNode(&root, courseNode2);
+    addCourseNode(&root, courseNode3);
+    addCourseNode(&root, courseNode4);
 
     // Build the student linked list
     StudentNode* studentNode = NULL;
     addStudentNode(&studentNode, studentNode1);
     addStudentNode(&studentNode, studentNode2);
     addStudentNode(&studentNode, studentNode3);
+    addStudentNode(&studentNode, studentNode4);
+    addStudentNode(&studentNode, studentNode5);
 
     // Add students to courses
     addCourseStudentNode(courseNode1, student1);
     addCourseStudentNode(courseNode1, student2);
     addCourseStudentNode(courseNode2, student1);
     addCourseStudentNode(courseNode2, student3);
+    addCourseStudentNode(courseNode3, student4);
+    addCourseStudentNode(courseNode3, student5);
+    addCourseStudentNode(courseNode4, student2);
+    addCourseStudentNode(courseNode4, student4);
 
     // Print data
     printCourses(root);
