@@ -245,7 +245,6 @@ CourseNode* minValueNode(CourseNode* node) {
     return current;
 }
 
-// TO BE FIXED
 void deleteCourseNode(CourseNode** rootPtr, char* id) {
     CourseNode* root = *rootPtr;
     if (root == NULL) {
@@ -263,17 +262,18 @@ void deleteCourseNode(CourseNode** rootPtr, char* id) {
         if (root->left == NULL) {
             *rootPtr = root->right;
             free(root);
+            printf("Course deleted successfully.\n");
         }
         else if (root->right == NULL) {
             *rootPtr = root->left;
             free(root);
+            printf("Course deleted successfully.\n");
         }
         else {
             CourseNode* temp = minValueNode(root->right);
             root->data = temp->data;
             deleteCourseNode(&(root->right), temp->data->id);
         }
-        printf("Course deleted successfully.\n");
     }
     balance(rootPtr);
 }
@@ -779,11 +779,12 @@ void adminMenu(CourseNode** rootPtr) {
                 int attrChoice;
                 scanf("%d", &attrChoice);
                 switch (attrChoice) {
+                // TO BE FIXED
                 case 1:
                     printf("Please enter the new course ID: ");
                     scanf("%s", courseId);
-                    deleteCourseNode(rootPtr, courseNode->data->id);
                     strcpy(courseNode->data->id, courseId);
+                    deleteCourseNode(rootPtr, courseNode->data->id);
                     addCourseNode(rootPtr, courseNode);
                     break;
                 case 2:
