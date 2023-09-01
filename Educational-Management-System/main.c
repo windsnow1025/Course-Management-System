@@ -779,13 +779,14 @@ void adminMenu(CourseNode** rootPtr) {
                 int attrChoice;
                 scanf("%d", &attrChoice);
                 switch (attrChoice) {
-                // TO BE FIXED
                 case 1:
                     printf("Please enter the new course ID: ");
                     scanf("%s", courseId);
-                    strcpy(courseNode->data->id, courseId);
+                    Teacher* teacher = createTeacher(courseNode->data->teacher->id, courseNode->data->teacher->password);
+                    Course* course = createCourse(courseId, courseNode->data->name, courseNode->data->credit, teacher, courseNode->data->time, courseNode->data->location);
+                    CourseNode* newCourseNode = createCourseNode(course);
                     deleteCourseNode(rootPtr, courseNode->data->id);
-                    addCourseNode(rootPtr, courseNode);
+                    addCourseNode(rootPtr, newCourseNode);
                     break;
                 case 2:
                     printf("Please enter the new course name: ");
