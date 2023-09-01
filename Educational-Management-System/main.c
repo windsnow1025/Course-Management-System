@@ -39,6 +39,7 @@ typedef struct Course {
 
 typedef struct CourseNode {
     Course* data;
+    int height;
     struct CourseNode* left;
     struct CourseNode* right;
 } CourseNode;
@@ -85,6 +86,7 @@ StudentNode* createStudentNode(Student* student) {
 CourseNode* createCourseNode(Course* course) {
     CourseNode* node = (CourseNode*)malloc(sizeof(CourseNode));
     node->data = course;
+    node->height = 1;
     node->left = NULL;
     node->right = NULL;
     return node;
@@ -96,6 +98,85 @@ CourseStudentNode* createCourseStudentNode(Student* student) {
     node->score = 0;
     node->next = NULL;
     return node;
+}
+
+/* Function for AVL Tree */
+
+int height(CourseNode* N) {
+    if (N == NULL)
+        return 0;
+    return N->height;
+}
+
+CourseNode* rightRotate(CourseNode* y) {
+    CourseNode* x = y->left;
+    CourseNode* T2 = x->right;
+
+    // Perform rotation
+    x->right = y;
+    y->left = T2;
+
+    // Update heights
+    y->height = max(height(y->left), height(y->right)) + 1;
+    x->height = max(height(x->left), height(x->right)) + 1;
+
+    // Return new root
+    return x;
+}
+
+CourseNode* leftRotate(CourseNode* x) {
+    CourseNode* y = x->right;
+    CourseNode* T2 = y->left;
+
+    // Perform rotation
+    y->left = x;
+    x->right = T2;
+
+    //  Update heights
+    x->height = max(height(x->left), height(x->right)) + 1;
+    y->height = max(height(y->left), height(y->right)) + 1;
+
+    // Return new root
+    return y;
+}
+
+int getBalance(CourseNode* N) {
+    if (N == NULL)
+        return 0;
+    return height(N->left) - height(N->right);
+}
+
+void balance(CourseNode** node) {
+    if (*node == NULL)
+        return;
+
+    /* Update height of this ancestor node */
+    (*node)->height = 1 + max(height((*node)->left), height((*node)->right));
+
+    /* Get the balance factor of this ancestor node to check whether this node became unbalanced */
+    int balance = getBalance(*node);
+
+    // If this node becomes unbalanced, then there are 4 cases
+
+    // Left Left Case
+    if (balance > 1 && getBalance((*node)->left) >= 0)
+        *node = rightRotate(*node);
+
+    // Right Right Case
+    if (balance < -1 && getBalance((*node)->right) <= 0)
+        *node = leftRotate(*node);
+
+    // Left Right Case
+    if (balance > 1 && getBalance((*node)->left) < 0) {
+        (*node)->left = leftRotate((*node)->left);
+        *node = rightRotate(*node);
+    }
+
+    // Right Left Case
+    if (balance < -1 && getBalance((*node)->right) > 0) {
+        (*node)->right = rightRotate((*node)->right);
+        *node = leftRotate(*node);
+    }
 }
 
 /* Function to add nodes */
@@ -126,6 +207,7 @@ void addCourseNode(CourseNode** rootPtr, CourseNode* node) {
     else if (cmp > 0) {
         addCourseNode(&(root->right), node);
     }
+    balance(rootPtr);
 }
 
 void addCourseStudentNode(CourseNode* courseNode, Student* student) {
@@ -163,6 +245,7 @@ CourseNode* minValueNode(CourseNode* node) {
     return current;
 }
 
+// TO BE FIXED
 void deleteCourseNode(CourseNode** rootPtr, char* id) {
     CourseNode* root = *rootPtr;
     if (root == NULL) {
@@ -192,6 +275,7 @@ void deleteCourseNode(CourseNode** rootPtr, char* id) {
         }
         printf("Course deleted successfully.\n");
     }
+    balance(rootPtr);
 }
 
 void delCourseStudentNode(CourseNode* courseNode, char* studentId) {
@@ -640,7 +724,7 @@ void adminMenu(CourseNode** rootPtr) {
         root = *rootPtr;
         system("cls");
         printf("1. Create Course Information\n");
-        printf("2. Add Course Information\n");
+        printf("2. Modify Course Information\n");
         printf("3. Delete Course Information\n");
         printf("4. Count Total Courses\n");
         printf("5. Query Course Student Count\n");
@@ -674,32 +758,71 @@ void adminMenu(CourseNode** rootPtr) {
             addCourseNode(rootPtr, courseNode);
             printf("Course created successfully.\n");
             break;
+        // TODO: Modify selected item
         case 2:
+            printf("Available courses:\n");
+            printCourseIds(root);
             printf("Please enter the course ID: ");
             scanf("%s", courseId);
             courseNode = searchCourse(root, courseId);
             if (courseNode != NULL) {
-                printf("Please enter the new course name: ");
-                scanf("%s", courseName);
-                printf("Please enter the new course credit: ");
-                scanf("%d", &courseCredit);
-                printf("Please enter the new teacher ID: ");
-                scanf("%s", teacherId);
-                printf("Please enter the new teacher password: ");
-                scanf("%s", teacherPassword);
-                while ((getchar()) != '\n');
-                printf("Please enter the new course time: ");
-                fgets(courseTime, sizeof(courseTime), stdin);
-                courseTime[strcspn(courseTime, "\n")] = 0;
-                printf("Please enter the new course location: ");
-                fgets(courseLocation, sizeof(courseLocation), stdin);
-                courseLocation[strcspn(courseLocation, "\n")] = 0;
-                strcpy(courseNode->data->name, courseName);
-                courseNode->data->credit = courseCredit;
-                strcpy(courseNode->data->teacher->id, teacherId);
-                strcpy(courseNode->data->teacher->password, teacherPassword);
-                strcpy(courseNode->data->time, courseTime);
-                strcpy(courseNode->data->location, courseLocation);
+                printCourse(courseNode);
+                printf("Please select an attribute to modify:\n");
+                printf("1. Course ID\n");
+                printf("2. Course Name\n");
+                printf("3. Course Credit\n");
+                printf("4. Teacher ID\n");
+                printf("5. Teacher Password\n");
+                printf("6. Course Time\n");
+                printf("7. Course Location\n");
+                printf("Please enter your choice: ");
+                int attrChoice;
+                scanf("%d", &attrChoice);
+                switch (attrChoice) {
+                case 1:
+                    printf("Please enter the new course ID: ");
+                    scanf("%s", courseId);
+                    deleteCourseNode(rootPtr, courseNode->data->id);
+                    strcpy(courseNode->data->id, courseId);
+                    addCourseNode(rootPtr, courseNode);
+                    break;
+                case 2:
+                    printf("Please enter the new course name: ");
+                    scanf("%s", courseName);
+                    strcpy(courseNode->data->name, courseName);
+                    break;
+                case 3:
+                    printf("Please enter the new course credit: ");
+                    scanf("%d", &courseCredit);
+                    courseNode->data->credit = courseCredit;
+                    break;
+                case 4:
+                    printf("Please enter the new teacher ID: ");
+                    scanf("%s", teacherId);
+                    strcpy(courseNode->data->teacher->id, teacherId);
+                    break;
+                case 5:
+                    printf("Please enter the new teacher password: ");
+                    scanf("%s", teacherPassword);
+                    strcpy(courseNode->data->teacher->password, teacherPassword);
+                    break;
+                case 6:
+                    printf("Please enter the new course time: ");
+                    while ((getchar()) != '\n');
+                    fgets(courseTime, sizeof(courseTime), stdin);
+                    courseTime[strcspn(courseTime, "\n")] = 0;
+                    strcpy(courseNode->data->time, courseTime);
+                    break;
+                case 7:
+                    printf("Please enter the new course location: ");
+                    while ((getchar()) != '\n');
+                    fgets(courseLocation, sizeof(courseLocation), stdin);
+                    courseLocation[strcspn(courseLocation, "\n")] = 0;
+                    strcpy(courseNode->data->location, courseLocation);
+                    break;
+                default:
+                    printf("Invalid choice. Please try again.\n");
+                }
                 printf("Course information updated successfully.\n");
             }
             else {
