@@ -34,7 +34,7 @@ typedef struct Course {
     Teacher* teacher;
     char time[64];
     char location[64];
-    CourseStudentNode* studentNode;
+    CourseStudentNode* courseStudentNode;
 } Course;
 
 typedef struct CourseNode {
@@ -70,7 +70,7 @@ Course* createCourse(char* id, char* name, int credit, Teacher* teacher, char* t
     course->teacher = teacher;
     strcpy(course->time, time);
     strcpy(course->location, location);
-    course->studentNode = NULL;
+    course->courseStudentNode = NULL;
     return course;
 }
 
@@ -215,11 +215,11 @@ void addCourseStudentNode(CourseNode* courseNode, Student* student) {
     if (courseNode == NULL) {
         return;
     }
-    if (courseNode->data->studentNode == NULL) {
-        courseNode->data->studentNode = courseStudentNode;
+    if (courseNode->data->courseStudentNode == NULL) {
+        courseNode->data->courseStudentNode = courseStudentNode;
         return;
     }
-    CourseStudentNode* currStudent = courseNode->data->studentNode;
+    CourseStudentNode* currStudent = courseNode->data->courseStudentNode;
     while (currStudent != NULL) {
         if (strcmp(currStudent->data->id, student->id) == 0) {
             printf("Student already exists in this course.\n");
@@ -284,11 +284,11 @@ void delCourseStudentNode(CourseNode* courseNode, char* studentId) {
         return;
     }
     CourseStudentNode* prevStudent = NULL;
-    CourseStudentNode* currStudent = courseNode->data->studentNode;
+    CourseStudentNode* currStudent = courseNode->data->courseStudentNode;
     while (currStudent != NULL) {
         if (strcmp(currStudent->data->id, studentId) == 0) {
             if (prevStudent == NULL) {
-                courseNode->data->studentNode = currStudent->next;
+                courseNode->data->courseStudentNode = currStudent->next;
             }
             else {
                 prevStudent->next = currStudent->next;
@@ -310,7 +310,7 @@ void modifyStudentScore(CourseNode* courseNode, char* studentId, int newScore) {
         printf("Course not found.\n");
         return;
     }
-    CourseStudentNode* student = courseNode->data->studentNode;
+    CourseStudentNode* student = courseNode->data->courseStudentNode;
     while (student != NULL) {
         if (strcmp(student->data->id, studentId) == 0) {
             student->score = newScore;
@@ -333,7 +333,7 @@ int countCourses(CourseNode* root) {
 
 int countCourseStudents(CourseNode* courseNode) {
     int count = 0;
-    CourseStudentNode* student = courseNode->data->studentNode;
+    CourseStudentNode* student = courseNode->data->courseStudentNode;
     while (student != NULL) {
         count++;
         student = student->next;
@@ -347,7 +347,7 @@ int queryCourseScore(CourseNode* courseNode, char* studentId) {
     if (courseNode == NULL) {
         return -1;
     }
-    CourseStudentNode* student = courseNode->data->studentNode;
+    CourseStudentNode* student = courseNode->data->courseStudentNode;
     while (student != NULL) {
         if (strcmp(student->data->id, studentId) == 0) {
             return student->score;
@@ -416,7 +416,7 @@ void printCourse(CourseNode* courseNode) {
     printf("Course Time: %s\n", courseNode->data->time);
     printf("Course Location: %s\n", courseNode->data->location);
     printf("Students:\n");
-    CourseStudentNode* student = courseNode->data->studentNode;
+    CourseStudentNode* student = courseNode->data->courseStudentNode;
     while (student != NULL) {
         printf("Student ID: %s, Score: %d\n", student->data->id, student->score);
         student = student->next;
@@ -439,7 +439,7 @@ void printCourseStudents(CourseNode* courseNode) {
         return;
     }
     printf("Students in course %s:\n", courseNode->data->id);
-    CourseStudentNode* student = courseNode->data->studentNode;
+    CourseStudentNode* student = courseNode->data->courseStudentNode;
     while (student != NULL) {
         printf("------------------------------------------\n");
         printf("Student ID: %s\n", student->data->id);
@@ -473,7 +473,7 @@ void printCourseScoreStatistics(CourseNode* courseNode) {
         return;
     }
     int count90 = 0, count80 = 0, count60 = 0, countBelow60 = 0;
-    CourseStudentNode* student = courseNode->data->studentNode;
+    CourseStudentNode* student = courseNode->data->courseStudentNode;
     while (student != NULL) {
         if (student->score >= 90) {
             count90++;
@@ -665,7 +665,7 @@ void teacherMenu(Teacher* teacher, CourseNode* root) {
             break;
         case 3:
             printf("Available students:\n");
-            printStudentIds(courseNode->data->studentNode);
+            printStudentIds(courseNode->data->courseStudentNode);
             printf("Please enter the student ID: ");
             scanf("%s", studentId);
             currentScore = queryCourseScore(courseNode, studentId);
@@ -683,7 +683,7 @@ void teacherMenu(Teacher* teacher, CourseNode* root) {
             break;
         case 4:
             printf("Available students:\n");
-            printStudentIds(courseNode->data->studentNode);
+            printStudentIds(courseNode->data->courseStudentNode);
             printf("Please enter the student ID: ");
             scanf("%s", studentId);
             currentScore = queryCourseScore(courseNode, studentId);
