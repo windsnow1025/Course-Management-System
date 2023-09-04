@@ -5,10 +5,10 @@
 #pragma warning(disable : 4996)
 
 typedef struct Student {
-    char id[20];
-    char name[20];
-    char phone[20];
-    char password[20];
+    char id[64];
+    char name[64];
+    char phone[64];
+    char password[64];
 } Student;
 
 typedef struct StudentNode {
@@ -23,17 +23,17 @@ typedef struct CourseStudentNode {
 } CourseStudentNode;
 
 typedef struct Teacher {
-    char id[20];
-    char password[20];
+    char id[64];
+    char password[64];
 } Teacher;
 
 typedef struct Course {
-    char id[20];
-    char name[20];
+    char id[64];
+    char name[64];
     int credit;
     Teacher* teacher;
-    char time[20];
-    char location[20];
+    char time[64];
+    char location[64];
     CourseStudentNode* studentNode;
 } Course;
 
@@ -441,7 +441,11 @@ void printCourseStudents(CourseNode* courseNode) {
     printf("Students in course %s:\n", courseNode->data->id);
     CourseStudentNode* student = courseNode->data->studentNode;
     while (student != NULL) {
+        printf("------------------------------------------\n");
         printf("Student ID: %s\n", student->data->id);
+        printf("Student Name: %s\n", student->data->name);
+        printf("Student Phone: %s\n", student->data->phone);
+        printf("Student Score: %d\n", student->score);
         student = student->next;
     }
 }
@@ -495,8 +499,8 @@ void printCourseScoreStatistics(CourseNode* courseNode) {
 /* Function to login */
 
 Student* studentLogin(StudentNode* studentNode) {
-    char id[20];
-    char password[20];
+    char id[64];
+    char password[64];
     printf("Please enter your student ID: ");
     scanf("%s", id);
     printf("Please enter your password: ");
@@ -513,8 +517,8 @@ Student* studentLogin(StudentNode* studentNode) {
 }
 
 Teacher* teacherLogin(CourseNode* root) {
-    char id[20];
-    char password[20];
+    char id[64];
+    char password[64];
     printf("Please enter your teacher ID: ");
     scanf("%s", id);
     printf("Please enter your password: ");
@@ -529,8 +533,8 @@ Teacher* teacherLogin(CourseNode* root) {
 }
 
 int adminLogin() {
-    char username[20];
-    char password[20];
+    char username[64];
+    char password[64];
     printf("Please enter your username: ");
     scanf("%s", username);
     printf("Please enter your password: ");
@@ -547,7 +551,7 @@ int adminLogin() {
 
 void studentMenu(Student* student, CourseNode* root) {
     int choice;
-    char courseId[20];
+    char courseId[64];
     CourseNode* courseNode;
     int score;
     while (1) {
@@ -584,7 +588,6 @@ void studentMenu(Student* student, CourseNode* root) {
             courseNode = searchCourse(root, courseId);
             if (courseNode != NULL) {
                 addCourseStudentNode(courseNode, student);
-                printf("Course registration successful.\n");
             }
             else {
                 printf("Course not found.\n");
@@ -636,8 +639,8 @@ void studentMenu(Student* student, CourseNode* root) {
 
 void teacherMenu(Teacher* teacher, CourseNode* root) {
     int choice;
-    char courseId[20];
-    char studentId[20];
+    char courseId[64];
+    char studentId[64];
     int currentScore;
     int newScore;
     CourseNode* courseNode = searchCourseByTeacherId(root, teacher->id);
@@ -711,13 +714,13 @@ void teacherMenu(Teacher* teacher, CourseNode* root) {
 void adminMenu(CourseNode** rootPtr) {
     CourseNode* root = *rootPtr;
     int choice;
-    char courseId[20];
-    char courseName[20];
+    char courseId[64];
+    char courseName[64];
     int courseCredit;
-    char teacherId[20];
-    char teacherPassword[20];
-    char courseTime[20];
-    char courseLocation[20];
+    char teacherId[64];
+    char teacherPassword[64];
+    char courseTime[64];
+    char courseLocation[64];
     CourseNode* courseNode;
     while (1) {
         choice = 0;
@@ -738,15 +741,17 @@ void adminMenu(CourseNode** rootPtr) {
             printf("Please enter the course ID: ");
             scanf("%s", courseId);
             printf("Please enter the course name: ");
-            scanf("%s", courseName);
+            while ((getchar()) != '\n');
+            fgets(courseName, sizeof(courseName), stdin);
+            courseName[strcspn(courseName, "\n")] = 0;
             printf("Please enter the course credit: ");
             scanf("%d", &courseCredit);
             printf("Please enter the teacher ID: ");
             scanf("%s", teacherId);
             printf("Please enter the teacher password: ");
             scanf("%s", teacherPassword);
-            while ((getchar()) != '\n');
             printf("Please enter the course time: ");
+            while ((getchar()) != '\n');
             fgets(courseTime, sizeof(courseTime), stdin);
             courseTime[strcspn(courseTime, "\n")] = 0;
             printf("Please enter the course location: ");
@@ -758,7 +763,6 @@ void adminMenu(CourseNode** rootPtr) {
             addCourseNode(rootPtr, courseNode);
             printf("Course created successfully.\n");
             break;
-        // TODO: Modify selected item
         case 2:
             printf("Available courses:\n");
             printCourseIds(root);
@@ -790,7 +794,9 @@ void adminMenu(CourseNode** rootPtr) {
                     break;
                 case 2:
                     printf("Please enter the new course name: ");
-                    scanf("%s", courseName);
+                    while ((getchar()) != '\n');
+                    fgets(courseName, sizeof(courseName), stdin);
+                    courseName[strcspn(courseName, "\n")] = 0;
                     strcpy(courseNode->data->name, courseName);
                     break;
                 case 3:
@@ -922,10 +928,10 @@ int main() {
     Student* student3 = createStudent("S003", "John", "12345678903", "123456");
     Student* student4 = createStudent("S004", "Alice", "12345678904", "123456");
     Student* student5 = createStudent("S005", "Bob", "12345678905", "123456");
-    Course* course1 = createCourse("C001", "Computer Science", 4, teacher1, "Monday 10:00", "Room 101");
-    Course* course2 = createCourse("C002", "Data Structures", 3, teacher2, "Tuesday 14:00", "Room 102");
-    Course* course3 = createCourse("C003", "Operating Systems", 3, teacher3, "Wednesday 10:00", "Room 103");
-    Course* course4 = createCourse("C004", "Networks", 3, teacher4, "Thursday 14:00", "Room 104");
+    Course* course1 = createCourse("C001", "Data Structures", 4, teacher1, "Monday 10:00", "Room 101");
+    Course* course2 = createCourse("C002", "Operating Systems", 3, teacher2, "Tuesday 14:00", "Room 102");
+    Course* course3 = createCourse("C003", "Computer Networks", 3, teacher3, "Wednesday 10:00", "Room 103");
+    Course* course4 = createCourse("C004", "Machine Learning", 3, teacher4, "Thursday 14:00", "Room 104");
 
     // Create nodes
     StudentNode* studentNode1 = createStudentNode(student1);
