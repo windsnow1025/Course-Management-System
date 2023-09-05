@@ -923,15 +923,15 @@ int main() {
     Teacher* teacher2 = createTeacher("T002", "123456");
     Teacher* teacher3 = createTeacher("T003", "123456");
     Teacher* teacher4 = createTeacher("T004", "123456");
-    Student* student1 = createStudent("S001", "Tom", "12345678901", "123456");
-    Student* student2 = createStudent("S002", "Jerry", "12345678902", "123456");
-    Student* student3 = createStudent("S003", "John", "12345678903", "123456");
-    Student* student4 = createStudent("S004", "Alice", "12345678904", "123456");
-    Student* student5 = createStudent("S005", "Bob", "12345678905", "123456");
-    Course* course1 = createCourse("C001", "Data Structures", 4, teacher1, "Monday 10:00", "Room 101");
-    Course* course2 = createCourse("C002", "Operating Systems", 3, teacher2, "Tuesday 14:00", "Room 102");
-    Course* course3 = createCourse("C003", "Computer Networks", 3, teacher3, "Wednesday 10:00", "Room 103");
-    Course* course4 = createCourse("C004", "Machine Learning", 3, teacher4, "Thursday 14:00", "Room 104");
+    Student* student1 = createStudent("S001", "Tom", "13312345678", "123456");
+    Student* student2 = createStudent("S002", "Jerry", "14912345678", "123456");
+    Student* student3 = createStudent("S003", "John", "15312345678", "123456");
+    Student* student4 = createStudent("S004", "Alice", "18012345678", "123456");
+    Student* student5 = createStudent("S005", "Bob", "18112345678", "123456");
+    Course* course1 = createCourse("22000210", "Calculus", 6, teacher1, "Monday 10:00", "Room 101");
+    Course* course2 = createCourse("22000622", "Linear Algebra", 3, teacher2, "Tuesday 14:00", "Room 102");
+    Course* course3 = createCourse("22000172", "Probability and Statistics", 3, teacher3, "Wednesday 10:00", "Room 103");
+    Course* course4 = createCourse("12002920", "Data Structure", 3, teacher4, "Thursday 14:00", "Room 104");
 
     // Create nodes
     StudentNode* studentNode1 = createStudentNode(student1);
