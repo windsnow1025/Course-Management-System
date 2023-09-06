@@ -112,15 +112,12 @@ CourseNode* rightRotate(CourseNode* y) {
     CourseNode* x = y->left;
     CourseNode* T2 = x->right;
 
-    // Perform rotation
     x->right = y;
     y->left = T2;
 
-    // Update heights
     y->height = max(height(y->left), height(y->right)) + 1;
     x->height = max(height(x->left), height(x->right)) + 1;
 
-    // Return new root
     return x;
 }
 
@@ -128,15 +125,12 @@ CourseNode* leftRotate(CourseNode* x) {
     CourseNode* y = x->right;
     CourseNode* T2 = y->left;
 
-    // Perform rotation
     y->left = x;
     x->right = T2;
 
-    //  Update heights
     x->height = max(height(x->left), height(x->right)) + 1;
     y->height = max(height(y->left), height(y->right)) + 1;
 
-    // Return new root
     return y;
 }
 
@@ -260,18 +254,23 @@ void deleteCourseNode(CourseNode** rootPtr, char* id) {
     }
     else {
         if (root->left == NULL) {
+            // node with only one child or no child
             *rootPtr = root->right;
             free(root);
             printf("Course deleted successfully.\n");
         }
         else if (root->right == NULL) {
+            // node with only one child or no child
             *rootPtr = root->left;
             free(root);
             printf("Course deleted successfully.\n");
         }
         else {
+            // node with two children: Get the inorder successor (smallest in the right subtree)
             CourseNode* temp = minValueNode(root->right);
+            // Copy the inorder successor's content to this node
             root->data = temp->data;
+            // Delete the inorder successor
             deleteCourseNode(&(root->right), temp->data->id);
         }
     }
