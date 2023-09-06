@@ -173,6 +173,20 @@ void balance(CourseNode** node) {
     }
 }
 
+void balanceTree(CourseNode** node) {
+    if (*node == NULL)
+        return;
+
+    // Balance the left subtree
+    balanceTree(&((*node)->left));
+
+    // Balance the right subtree
+    balanceTree(&((*node)->right));
+
+    // Balance this node
+    balance(node);
+}
+
 /* Function to add nodes */
 
 void addStudentNode(StudentNode** headPtr, StudentNode* node) {
@@ -201,7 +215,7 @@ void addCourseNode(CourseNode** rootPtr, CourseNode* node) {
     else if (cmp > 0) {
         addCourseNode(&(root->right), node);
     }
-    balance(rootPtr);
+    balanceTree(rootPtr);
 }
 
 void addCourseStudentNode(CourseNode* courseNode, Student* student) {
@@ -274,7 +288,7 @@ void deleteCourseNode(CourseNode** rootPtr, char* id) {
             deleteCourseNode(&(root->right), temp->data->id);
         }
     }
-    balance(rootPtr);
+    balanceTree(rootPtr);
 }
 
 void delCourseStudentNode(CourseNode* courseNode, char* studentId) {
@@ -815,10 +829,10 @@ void adminMenu(CourseNode** rootPtr) {
                     CourseNode* newCourseNode = createCourseNode(course);
                     deleteCourseNode(rootPtr, courseNode->data->id);
                     addCourseNode(rootPtr, newCourseNode);
+                    courseNode = newCourseNode;
                     break;
                 case 2:
                     printf("Please enter the new course name: ");
-                    while ((getchar()) != '\n');
                     fgets(courseName, sizeof(courseName), stdin);
                     courseName[strcspn(courseName, "\n")] = 0;
                     strcpy(courseNode->data->name, courseName);
@@ -843,14 +857,12 @@ void adminMenu(CourseNode** rootPtr) {
                     break;
                 case 6:
                     printf("Please enter the new course time: ");
-                    while ((getchar()) != '\n');
                     fgets(courseTime, sizeof(courseTime), stdin);
                     courseTime[strcspn(courseTime, "\n")] = 0;
                     strcpy(courseNode->data->time, courseTime);
                     break;
                 case 7:
                     printf("Please enter the new course location: ");
-                    while ((getchar()) != '\n');
                     fgets(courseLocation, sizeof(courseLocation), stdin);
                     courseLocation[strcspn(courseLocation, "\n")] = 0;
                     strcpy(courseNode->data->location, courseLocation);
