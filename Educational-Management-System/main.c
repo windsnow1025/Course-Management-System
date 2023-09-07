@@ -102,6 +102,10 @@ CourseStudentNode* createCourseStudentNode(Student* student) {
 
 /* Function for AVL Tree */
 
+//int max(int a, int b) {
+//	return (a > b) ? a : b;
+//}
+
 int height(CourseNode* N) {
     if (N == NULL)
         return 0;
@@ -230,13 +234,13 @@ void addCourseStudentNode(CourseNode* courseNode, Student* student) {
     CourseStudentNode* currStudent = courseNode->data->courseStudentNode;
     while (currStudent != NULL) {
         if (strcmp(currStudent->data->id, student->id) == 0) {
-            printf("Student already exists in this course.\n");
+            printf("该课程中已存在此学生.\n");
             free(courseStudentNode);
             return;
         }
         if (currStudent->next == NULL) {
             currStudent->next = courseStudentNode;
-            printf("Course registration successful.\n");
+            printf("课程报名成功.\n");
             return;
         }
         currStudent = currStudent->next;
@@ -256,7 +260,7 @@ CourseNode* minValueNode(CourseNode* node) {
 void deleteCourseNode(CourseNode** rootPtr, char* id) {
     CourseNode* root = *rootPtr;
     if (root == NULL) {
-        printf("Course not found.\n");
+        printf("课程不存在.\n");
         return;
     }
     int cmp = strcmp(id, root->data->id);
@@ -271,13 +275,13 @@ void deleteCourseNode(CourseNode** rootPtr, char* id) {
             // node with only one child or no child
             *rootPtr = root->right;
             free(root);
-            printf("Course deleted successfully.\n");
+            printf("课程删除成功.\n");
         }
         else if (root->right == NULL) {
             // node with only one child or no child
             *rootPtr = root->left;
             free(root);
-            printf("Course deleted successfully.\n");
+            printf("课程删除成功.\n");
         }
         else {
             // node with two children: Get the inorder successor (smallest in the right subtree)
@@ -293,7 +297,7 @@ void deleteCourseNode(CourseNode** rootPtr, char* id) {
 
 void delCourseStudentNode(CourseNode* courseNode, char* studentId) {
     if (courseNode == NULL) {
-        printf("Course not found.\n");
+        printf("课程不存在.\n");
         return;
     }
     CourseStudentNode* prevStudent = NULL;
@@ -307,32 +311,32 @@ void delCourseStudentNode(CourseNode* courseNode, char* studentId) {
                 prevStudent->next = currStudent->next;
             }
             free(currStudent);
-            printf("Course registration cancelled successfully.\n");
+            printf("课程取消报名成功.\n");
             return;
         }
         prevStudent = currStudent;
         currStudent = currStudent->next;
     }
-    printf("Student not found in this course.\n");
+    printf("该课程中不存在此学生.\n");
 }
 
 /* Function to modify nodes */
 
 void modifyStudentScore(CourseNode* courseNode, char* studentId, int newScore) {
     if (courseNode == NULL) {
-        printf("Course not found.\n");
+        printf("课程不存在.\n");
         return;
     }
     CourseStudentNode* student = courseNode->data->courseStudentNode;
     while (student != NULL) {
         if (strcmp(student->data->id, studentId) == 0) {
             student->score = newScore;
-            printf("Score of student %s in course %s has been modified to %d.\n", studentId, courseNode->data->id, newScore);
+            printf("学生 %s 在课程 %s 中的分数已被修改为 %d.\n", studentId, courseNode->data->id, newScore);
             return;
         }
         student = student->next;
     }
-    printf("Student not found in this course.\n");
+    printf("该课程中不存在此学生.\n");
 }
 
 /* Function to count nodes */
@@ -418,20 +422,20 @@ Teacher* searchTeacherInCourse(CourseNode* root, char* id, char* password) {
 
 void printCourse(CourseNode* courseNode) {
     if (courseNode == NULL) {
-        printf("Course not found.\n");
+        printf("课程不存在.\n");
         return;
     }
     printf("------------------------------------------\n");
-    printf("Course ID: %s\n", courseNode->data->id);
-    printf("Course Name: %s\n", courseNode->data->name);
-    printf("Course Credit: %d\n", courseNode->data->credit);
-    printf("Course Teacher: %s\n", courseNode->data->teacher->id);
-    printf("Course Time: %s\n", courseNode->data->time);
-    printf("Course Location: %s\n", courseNode->data->location);
-    printf("Students:\n");
+    printf("课程编号: %s\n", courseNode->data->id);
+    printf("课程名: %s\n", courseNode->data->name);
+    printf("课程学分: %d\n", courseNode->data->credit);
+    printf("课程教师: %s\n", courseNode->data->teacher->id);
+    printf("课程时间: %s\n", courseNode->data->time);
+    printf("课程地点: %s\n", courseNode->data->location);
+    printf("学生:\n");
     CourseStudentNode* student = courseNode->data->courseStudentNode;
     while (student != NULL) {
-        printf("Student ID: %s, Score: %d\n", student->data->id, student->score);
+        printf("\t学号: %s, 分数: %d\n", student->data->id, student->score);
         student = student->next;
     }
     printf("------------------------------------------\n\n");
@@ -448,17 +452,17 @@ void printCourses(CourseNode* root) {
 
 void printCourseStudents(CourseNode* courseNode) {
     if (courseNode == NULL) {
-        printf("Course not found.\n");
+        printf("课程不存在.\n");
         return;
     }
     printf("Students in course %s:\n", courseNode->data->id);
     CourseStudentNode* student = courseNode->data->courseStudentNode;
     while (student != NULL) {
         printf("------------------------------------------\n");
-        printf("Student ID: %s\n", student->data->id);
-        printf("Student Name: %s\n", student->data->name);
-        printf("Student Phone: %s\n", student->data->phone);
-        printf("Student Score: %d\n", student->score);
+        printf("学号: %s\n", student->data->id);
+        printf("学生名: %s\n", student->data->name);
+        printf("学生手机号: %s\n", student->data->phone);
+        printf("学生分数: %d\n", student->score);
         student = student->next;
     }
 }
@@ -468,21 +472,21 @@ void printCourseIds(CourseNode* root) {
         return;
     }
     printCourseIds(root->left);
-    printf("Course ID: %s\n", root->data->id);
+    printf("课程编号: %s\n", root->data->id);
     printCourseIds(root->right);
 }
 
 void printStudentIds(CourseStudentNode* head) {
     CourseStudentNode* curr = head;
     while (curr != NULL) {
-        printf("Student ID: %s\n", curr->data->id);
+        printf("学号: %s\n", curr->data->id);
         curr = curr->next;
     }
 }
 
 void printCourseScoreStatistics(CourseNode* courseNode) {
     if (courseNode == NULL) {
-        printf("Course not found.\n");
+        printf("课程不存在.\n");
         return;
     }
     int count90 = 0, count80 = 0, count60 = 0, countBelow60 = 0;
@@ -502,11 +506,11 @@ void printCourseScoreStatistics(CourseNode* courseNode) {
         }
         student = student->next;
     }
-    printf("Statistics of course %s:\n", courseNode->data->id);
-    printf("90 and above: %d\n", count90);
-    printf("80 to 89: %d\n", count80);
-    printf("60 to 79: %d\n", count60);
-    printf("Below 60: %d\n", countBelow60);
+    printf("课程分数统计 %s:\n", courseNode->data->id);
+    printf("90 - 100: %d\n", count90);
+    printf("80 - 89: %d\n", count80);
+    printf("60 - 79: %d\n", count60);
+    printf("0 - 60: %d\n", countBelow60);
 }
 
 /* Function to login */
@@ -514,55 +518,55 @@ void printCourseScoreStatistics(CourseNode* courseNode) {
 Student* studentLogin(StudentNode* studentNode) {
     char id[64];
     char password[64];
-    printf("Please enter your student ID: ");
+    printf("请输入学号: ");
     scanf("%s", id);
     while ((getchar()) != '\n');
-    printf("Please enter your password: ");
+    printf("请输入密码: ");
     scanf("%s", password);
     while ((getchar()) != '\n');
     while (studentNode != NULL) {
         if (strcmp(studentNode->data->id, id) == 0 && strcmp(studentNode->data->password, password) == 0) {
-            printf("Login successful.\n");
+            printf("登录成功.\n");
             return studentNode->data;
         }
         studentNode = studentNode->next;
     }
-    printf("Login failed.\n");
+    printf("登录失败.\n");
     return NULL;
 }
 
 Teacher* teacherLogin(CourseNode* root) {
     char id[64];
     char password[64];
-    printf("Please enter your teacher ID: ");
+    printf("请输入教师编号: ");
     scanf("%s", id);
     while ((getchar()) != '\n');
-    printf("Please enter your password: ");
+    printf("请输入密码: ");
     scanf("%s", password);
     while ((getchar()) != '\n');
     Teacher* teacher = searchTeacherInCourse(root, id, password);
     if (teacher != NULL) {
-        printf("Login successful.\n");
+        printf("登录成功.\n");
         return teacher;
     }
-    printf("Login failed.\n");
+    printf("登录失败.\n");
     return NULL;
 }
 
 int adminLogin() {
     char username[64];
     char password[64];
-    printf("Please enter your username: ");
+    printf("请输入用户名: ");
     scanf("%s", username);
     while ((getchar()) != '\n');
-    printf("Please enter your password: ");
+    printf("请输入密码: ");
     scanf("%s", password);
     while ((getchar()) != '\n');
     if (strcmp(username, "admin") == 0 && strcmp(password, "admin") == 0) {
-        printf("Login successful.\n");
+        printf("登录成功.\n");
         return 1;
     }
-    printf("Login failed.\n");
+    printf("登录失败.\n");
     return 0;
 }
 
@@ -576,20 +580,21 @@ void studentMenu(Student* student, CourseNode* root) {
     while (1) {
         choice = 0;
         system("cls");
-        printf("1. Query Course Information\n");
-        printf("2. Register for a Course\n");
-        printf("3. Cancel Course Registration\n");
-        printf("4. Query Course Score\n");
-        printf("5. Browse All Course Information\n");
-        printf("6. Logout\n");
-        printf("Please enter your choice: ");
+        printf("学号: %s\n", student->id);
+        printf("1. 查询课程信息\n");
+        printf("2. 报名课程学习\n");
+        printf("3. 取消报名课程\n");
+        printf("4. 查询课程分数\n");
+        printf("5. 浏览所有课程信息\n");
+        printf("6. 退出登录\n");
+        printf("请输入选项: ");
         scanf("%d", &choice);
         while ((getchar()) != '\n');
         switch (choice) {
         case 1:
-            printf("Available courses:\n");
+            printf("现有课程:\n");
             printCourseIds(root);
-            printf("Please enter the course ID: ");
+            printf("请输入课程编号: ");
             scanf("%s", courseId);
             while ((getchar()) != '\n');
             courseNode = searchCourse(root, courseId);
@@ -597,13 +602,13 @@ void studentMenu(Student* student, CourseNode* root) {
                 printCourse(courseNode);
             }
             else {
-                printf("Course not found.\n");
+                printf("课程不存在.\n");
             }
             break;
         case 2:
-            printf("Available courses:\n");
+            printf("现有课程:\n");
             printCourseIds(root);
-            printf("Please enter the course ID: ");
+            printf("请输入课程编号: ");
             scanf("%s", courseId);
             while ((getchar()) != '\n');
             courseNode = searchCourse(root, courseId);
@@ -612,13 +617,13 @@ void studentMenu(Student* student, CourseNode* root) {
                 printCourse(courseNode);
             }
             else {
-                printf("Course not found.\n");
+                printf("课程不存在.\n");
             }
             break;
         case 3:
-            printf("Available courses:\n");
+            printf("现有课程:\n");
             printCourseIds(root);
-            printf("Please enter the course ID: ");
+            printf("请输入课程编号: ");
             scanf("%s", courseId);
             while ((getchar()) != '\n');
             courseNode = searchCourse(root, courseId);
@@ -627,27 +632,27 @@ void studentMenu(Student* student, CourseNode* root) {
                 printCourse(courseNode);
             }
             else {
-                printf("Course not found.\n");
+                printf("课程不存在.\n");
             }
             break;
         case 4:
-            printf("Available courses:\n");
+            printf("现有课程:\n");
             printCourseIds(root);
-            printf("Please enter the course ID: ");
+            printf("请输入课程编号: ");
             scanf("%s", courseId);
             while ((getchar()) != '\n');
             courseNode = searchCourse(root, courseId);
             if (courseNode != NULL) {
                 score = queryCourseScore(courseNode, student->id);
                 if (score == -1) {
-					printf("You are not registered for this course.\n");
+					printf("课程未报名.\n");
 				}
 				else {
-					printf("Your score for this course is %d.\n", score);
+					printf("你的课程分数是 %d.\n", score);
 				}
             }
             else {
-                printf("Course not found.\n");
+                printf("课程不存在.\n");
             }
             break;
         case 5:
@@ -656,7 +661,7 @@ void studentMenu(Student* student, CourseNode* root) {
         case 6:
             return;
         default:
-            printf("Invalid choice. Please try again.\n");
+            printf("无效的选择. 请重新输入.\n");
         }
         system("pause");
     }
@@ -672,13 +677,14 @@ void teacherMenu(Teacher* teacher, CourseNode* root) {
     while (1) {
         choice = 0;
         system("cls");
-        printf("1. Query My Course Information\n");
-        printf("2. Query My Students Information\n");
-        printf("3. Input Course Score\n");
-        printf("4. Modify Course Score\n");
-        printf("5. Statistics of Course Score\n");
-        printf("6. Logout\n");
-        printf("Please enter your choice: ");
+        printf("教师编号: %s\n", teacher->id);
+        printf("1. 查询我的课程信息\n");
+        printf("2. 查询我的学生信息\n");
+        printf("3. 输入学生分数\n");
+        printf("4. 修改学生分数\n");
+        printf("5. 学生分数统计\n");
+        printf("6. 退出登录\n");
+        printf("请输入选项: ");
         scanf("%d", &choice);
         while ((getchar()) != '\n');
         switch (choice) {
@@ -689,46 +695,46 @@ void teacherMenu(Teacher* teacher, CourseNode* root) {
             printCourseStudents(courseNode);
             break;
         case 3:
-            printf("Available students:\n");
+            printf("现有学生:\n");
             printStudentIds(courseNode->data->courseStudentNode);
-            printf("Please enter the student ID: ");
+            printf("请输入学号: ");
             scanf("%s", studentId);
             while ((getchar()) != '\n');
             currentScore = queryCourseScore(courseNode, studentId);
             if (currentScore == 0) {
                 newScore = 0;
-                printf("Please enter the new score: ");
+                printf("请输入新分数: ");
                 scanf("%d", &newScore);
                 while ((getchar()) != '\n');
                 modifyStudentScore(courseNode, studentId, newScore);
                 printCourse(courseNode);
             }
             else if (currentScore == -1) {
-				printf("Student not found.\n");
+				printf("学生不存在.\n");
 			}
             else {
-                printf("Score already exists. Please use Modify Course Score.\n");
+                printf("分数已存在. 请选择“修改学生分数”.\n");
             }
             break;
         case 4:
-            printf("Available students:\n");
+            printf("现有学生:\n");
             printStudentIds(courseNode->data->courseStudentNode);
-            printf("Please enter the student ID: ");
+            printf("请输入学号: ");
             scanf("%s", studentId);
             while ((getchar()) != '\n');
             currentScore = queryCourseScore(courseNode, studentId);
             if (currentScore != 0) {
-                printf("Please enter the new score: ");
+                printf("请输入新分数: ");
                 scanf("%d", &newScore);
                 while ((getchar()) != '\n');
                 modifyStudentScore(courseNode, studentId, newScore);
                 printCourse(courseNode);
             }
             else if (currentScore == -1) {
-                printf("Student not found.\n");
+                printf("学生不存在.\n");
 			}
             else {
-                printf("No score found. Please use Input Course Score.\n");
+                printf("分数不存在. 请选择“输入学生分数”.\n");
             }
             break;
         case 5:
@@ -737,7 +743,7 @@ void teacherMenu(Teacher* teacher, CourseNode* root) {
         case 6:
             return;
         default:
-            printf("Invalid choice. Please try again.\n");
+            printf("无效的选择. 请重新输入.\n");
         }
         system("pause");
     }
@@ -758,149 +764,154 @@ void adminMenu(CourseNode** rootPtr) {
         choice = 0;
         root = *rootPtr;
         system("cls");
-        printf("1. Create Course Information\n");
-        printf("2. Modify Course Information\n");
-        printf("3. Delete Course Information\n");
-        printf("4. Count Total Courses\n");
-        printf("5. Query Course Student Count\n");
-        printf("6. Browse All Course Information\n");
-        printf("7. Logout\n");
-        printf("Please enter your choice: ");
+        printf("1. 创建课程信息\n");
+        printf("2. 修改课程信息\n");
+        printf("3. 删除课程信息\n");
+        printf("4. 查询课程总数\n");
+        printf("5. 查询课程中的学生总数\n");
+        printf("6. 浏览所有课程信息\n");
+        printf("7. 退出登录\n");
+        printf("请输入选项: ");
         scanf("%d", &choice);
         while ((getchar()) != '\n');
         switch (choice) {
         case 1:
-            printf("Please enter the course ID: ");
+            printf("请输入课程编号: ");
             scanf("%s", courseId);
             while ((getchar()) != '\n');
-            printf("Please enter the course name: ");
+            printf("请输入课程名: ");
             fgets(courseName, sizeof(courseName), stdin);
             courseName[strcspn(courseName, "\n")] = 0;
-            printf("Please enter the course credit: ");
+            printf("请输入课程学分: ");
             scanf("%d", &courseCredit);
             while ((getchar()) != '\n');
-            printf("Please enter the teacher ID: ");
+            printf("请输入教师编号: ");
             scanf("%s", teacherId);
             while ((getchar()) != '\n');
-            printf("Please enter the teacher password: ");
+            printf("请输入教师密码: ");
             scanf("%s", teacherPassword);
             while ((getchar()) != '\n');
-            printf("Please enter the course time: ");
+            printf("请输入上课时间: ");
             fgets(courseTime, sizeof(courseTime), stdin);
             courseTime[strcspn(courseTime, "\n")] = 0;
-            printf("Please enter the course location: ");
+            printf("请输入上课地点: ");
             fgets(courseLocation, sizeof(courseLocation), stdin);
             courseLocation[strcspn(courseLocation, "\n")] = 0;
             Teacher* teacher = createTeacher(teacherId, teacherPassword);
             Course* course = createCourse(courseId, courseName, courseCredit, teacher, courseTime, courseLocation);
             CourseNode* courseNode = createCourseNode(course);
             addCourseNode(rootPtr, courseNode);
-            printf("Course created successfully.\n");
+            printf("课程创建成功.\n");
             printCourse(courseNode);
             break;
         case 2:
-            printf("Available courses:\n");
+            printf("现有课程:\n");
             printCourseIds(root);
-            printf("Please enter the course ID: ");
+            printf("请输入课程编号: ");
             scanf("%s", courseId);
             while ((getchar()) != '\n');
             courseNode = searchCourse(root, courseId);
             if (courseNode != NULL) {
                 printCourse(courseNode);
-                printf("Please select an attribute to modify:\n");
-                printf("1. Course ID\n");
-                printf("2. Course Name\n");
-                printf("3. Course Credit\n");
-                printf("4. Teacher ID\n");
-                printf("5. Teacher Password\n");
-                printf("6. Course Time\n");
-                printf("7. Course Location\n");
-                printf("Please enter your choice: ");
+                printf("请输入需修改的课程属性:\n");
+                printf("1. 课程编号\n");
+                printf("2. 课程名\n");
+                printf("3. 课程学分\n");
+                printf("4. 教师编号\n");
+                printf("5. 教师密码\n");
+                printf("6. 上课时间\n");
+                printf("7. 上课地点\n");
+                printf("请输入选项: ");
                 int attrChoice;
                 scanf("%d", &attrChoice);
                 while ((getchar()) != '\n');
                 switch (attrChoice) {
                 case 1:
-                    printf("Please enter the new course ID: ");
+                    printf("请输入新课程编号: ");
                     scanf("%s", courseId);
                     while ((getchar()) != '\n');
                     Teacher* teacher = createTeacher(courseNode->data->teacher->id, courseNode->data->teacher->password);
                     Course* course = createCourse(courseId, courseNode->data->name, courseNode->data->credit, teacher, courseNode->data->time, courseNode->data->location);
                     CourseNode* newCourseNode = createCourseNode(course);
+                    CourseStudentNode* student = courseNode->data->courseStudentNode;
                     deleteCourseNode(rootPtr, courseNode->data->id);
                     addCourseNode(rootPtr, newCourseNode);
+                    while (student != NULL) {
+						addCourseStudentNode(newCourseNode, student->data);
+						student = student->next;
+					}
                     courseNode = newCourseNode;
                     break;
                 case 2:
-                    printf("Please enter the new course name: ");
+                    printf("请输入新课程名: ");
                     fgets(courseName, sizeof(courseName), stdin);
                     courseName[strcspn(courseName, "\n")] = 0;
                     strcpy(courseNode->data->name, courseName);
                     break;
                 case 3:
-                    printf("Please enter the new course credit: ");
+                    printf("请输入新课程学分: ");
                     scanf("%d", &courseCredit);
                     while ((getchar()) != '\n');
                     courseNode->data->credit = courseCredit;
                     break;
                 case 4:
-                    printf("Please enter the new teacher ID: ");
+                    printf("请输入新教师编号: ");
                     scanf("%s", teacherId);
                     while ((getchar()) != '\n');
                     strcpy(courseNode->data->teacher->id, teacherId);
                     break;
                 case 5:
-                    printf("Please enter the new teacher password: ");
+                    printf("请输入新教师密码: ");
                     scanf("%s", teacherPassword);
                     while ((getchar()) != '\n');
                     strcpy(courseNode->data->teacher->password, teacherPassword);
                     break;
                 case 6:
-                    printf("Please enter the new course time: ");
+                    printf("请输入新上课时间: ");
                     fgets(courseTime, sizeof(courseTime), stdin);
                     courseTime[strcspn(courseTime, "\n")] = 0;
                     strcpy(courseNode->data->time, courseTime);
                     break;
                 case 7:
-                    printf("Please enter the new course location: ");
+                    printf("请输入新上课地点: ");
                     fgets(courseLocation, sizeof(courseLocation), stdin);
                     courseLocation[strcspn(courseLocation, "\n")] = 0;
                     strcpy(courseNode->data->location, courseLocation);
                     break;
                 default:
-                    printf("Invalid choice. Please try again.\n");
+                    printf("无效的选择. 请重新输入.\n");
                 }
-                printf("Course information updated successfully.\n");
+                printf("课程信息更新成功.\n");
                 printCourse(courseNode);
             }
             else {
-                printf("Course not found.\n");
+                printf("课程不存在.\n");
             }
             break;
         case 3:
-            printf("Available courses:\n");
+            printf("现有课程:\n");
             printCourseIds(root);
-            printf("Please enter the course ID: ");
+            printf("请输入课程编号: ");
             scanf("%s", courseId);
             while ((getchar()) != '\n');
             deleteCourseNode(rootPtr, courseId);
             printCourses(root);
             break;
         case 4:
-            printf("Total number of courses: %d\n", countCourses(root));
+            printf("课程总数: %d\n", countCourses(root));
             break;
         case 5:
-            printf("Available courses:\n");
+            printf("现有课程:\n");
             printCourseIds(root);
-            printf("Please enter the course ID: ");
+            printf("请输入课程编号: ");
             scanf("%s", courseId);
             while ((getchar()) != '\n');
             courseNode = searchCourse(root, courseId);
             if (courseNode != NULL) {
-                printf("Number of students in course %s: %d\n", courseId, countCourseStudents(courseNode));
+                printf("课程 %s 中的学生总数 %d\n", courseId, countCourseStudents(courseNode));
             }
             else {
-                printf("Course not found.\n");
+                printf("课程不存在.\n");
             }
             break;
         case 6:
@@ -909,7 +920,7 @@ void adminMenu(CourseNode** rootPtr) {
         case 7:
             return;
         default:
-            printf("Invalid choice. Please try again.\n");
+            printf("无效的选择. 请重新输入.\n");
         }
         system("pause");
     }
@@ -923,25 +934,23 @@ void loginMenu(CourseNode* courseNode, StudentNode* studentNode) {
     while (1) {
         choice = 0;
         system("cls");
-        printf("1. Student Login\n");
-        printf("2. Teacher Login\n");
-        printf("3. Admin Login\n");
-        printf("4. Exit\n");
-        printf("Please enter your choice: ");
+        printf("1. 学生登录\n");
+        printf("2. 教师登录\n");
+        printf("3. 管理员登录\n");
+        printf("4. 退出\n");
+        printf("请输入选项: ");
         scanf("%d", &choice);
         while ((getchar()) != '\n');
         switch (choice) {
         case 1:
             student = studentLogin(studentNode);
             if (student != NULL) {
-                printf("User ID: %s\n", student->id);
                 studentMenu(student, courseNode);
             }
             break;
         case 2:
             teacher = teacherLogin(courseNode);
             if (teacher != NULL) {
-                printf("User ID: %s\n", teacher->id);
                 teacherMenu(teacher, courseNode);
             }
             break;
@@ -954,7 +963,7 @@ void loginMenu(CourseNode* courseNode, StudentNode* studentNode) {
         case 4:
             return;
         default:
-            printf("Invalid choice. Please try again.\n");
+            printf("无效的选择. 请重新输入.\n");
         }
         system("pause");
     }
@@ -966,15 +975,15 @@ int main() {
     Teacher* teacher2 = createTeacher("T002", "123456");
     Teacher* teacher3 = createTeacher("T003", "123456");
     Teacher* teacher4 = createTeacher("T004", "123456");
-    Student* student1 = createStudent("S001", "Tom", "13312345678", "123456");
-    Student* student2 = createStudent("S002", "Jerry", "14912345678", "123456");
-    Student* student3 = createStudent("S003", "John", "15312345678", "123456");
-    Student* student4 = createStudent("S004", "Alice", "18012345678", "123456");
-    Student* student5 = createStudent("S005", "Bob", "18112345678", "123456");
-    Course* course1 = createCourse("22000210", "Calculus", 6, teacher1, "Monday 10:00", "Room 101");
-    Course* course2 = createCourse("22000622", "Linear Algebra", 3, teacher2, "Tuesday 14:00", "Room 102");
-    Course* course3 = createCourse("22000172", "Probability and Statistics", 3, teacher3, "Wednesday 10:00", "Room 103");
-    Course* course4 = createCourse("12002920", "Data Structure", 3, teacher4, "Thursday 14:00", "Room 104");
+    Student* student1 = createStudent("2135061128", "杨同学", "13312345678", "123456");
+    Student* student2 = createStudent("2135061018", "张同学", "14912345678", "123456");
+    Student* student3 = createStudent("2135061130", "李同学", "15312345678", "123456");
+    Student* student4 = createStudent("2135061206", "王同学", "18012345678", "123456");
+    Student* student5 = createStudent("2135061224", "刘同学", "18112345678", "123456");
+    Course* course1 = createCourse("22000210", "高等数学", 6, teacher1, "星期一 10:00", "一教 101");
+    Course* course2 = createCourse("22000622", "线性代数", 3, teacher2, "星期二 14:00", "一教 102");
+    Course* course3 = createCourse("22000172", "概率与统计", 3, teacher3, "星期三 10:00", "一教 103");
+    Course* course4 = createCourse("12002920", "数据结构", 3, teacher4, "星期四 14:00", "五教 204");
 
     // Create nodes
     StudentNode* studentNode1 = createStudentNode(student1);
