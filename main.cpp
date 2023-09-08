@@ -516,9 +516,9 @@ Student* studentLogin(StudentNode* studentNode) {
     string id;
     string password;
     cout << "请输入学号: ";
-    cin >> id;
+    getline(cin, id);
     cout << "请输入密码: ";
-    cin >> password;
+    getline(cin, password);
     while (studentNode != NULL) {
         if (studentNode->data->id == id && studentNode->data->password == password) {
             cout << "登录成功." << endl;
@@ -534,9 +534,9 @@ Teacher* teacherLogin(CourseNode* root) {
     string id;
     string password;
     cout << "请输入教师编号: ";
-    cin >> id;
+    getline(cin, id);
     cout << "请输入密码: ";
-    cin >> password;
+    getline(cin, password);
     Teacher* teacher = searchTeacherInCourse(root, id, password);
     if (teacher != NULL) {
         cout << "登录成功." << endl;
@@ -550,9 +550,9 @@ int adminLogin() {
     string username;
     string password;
     cout << "请输入用户名: ";
-    cin >> username;
-    cout << "请输入密码: ";
-    cin >> password;
+    getline(cin, username);
+            cout << "请输入密码: ";
+    getline(cin, password);
     if (username == "admin" && password == "admin") {
         cout << "登录成功." << endl;
         return 1;
@@ -580,13 +580,14 @@ void studentMenu(Student* student, CourseNode* root) {
         cout << "6. 退出登录" << endl;
         cout << "请输入选项: ";
         cin >> choice;
+        cin.ignore();
         switch (choice) {
         case 1:
             cout << "现有课程:" << endl;
             printCourseIds(root);
             cout << "请输入课程编号: ";
             cin >> courseId;
-            cin >> courseId;
+            cin.ignore();
             courseNode = searchCourse(root, courseId);
             if (courseNode != NULL) {
                 printCourse(courseNode);
@@ -600,7 +601,7 @@ void studentMenu(Student* student, CourseNode* root) {
             printCourseIds(root);
             cout << "请输入课程编号: ";
             cin >> courseId;
-            cin >> courseId;
+            cin.ignore();
             courseNode = searchCourse(root, courseId);
             if (courseNode != NULL) {
                 addCourseStudentNode(courseNode, student);
@@ -615,7 +616,7 @@ void studentMenu(Student* student, CourseNode* root) {
             printCourseIds(root);
             cout << "请输入课程编号: ";
             cin >> courseId;
-
+            cin.ignore();
             courseNode = searchCourse(root, courseId);
             if (courseNode != NULL) {
                 delCourseStudentNode(courseNode, student->id);
@@ -630,6 +631,7 @@ void studentMenu(Student* student, CourseNode* root) {
             printCourseIds(root);
             cout << "请输入课程编号: ";
             cin >> courseId;
+            cin.ignore();
             courseNode = searchCourse(root, courseId);
             if (courseNode != NULL) {
                 score = queryCourseScore(courseNode, student->id);
@@ -676,6 +678,7 @@ void teacherMenu(Teacher* teacher, CourseNode* root) {
         cout << "6. 退出登录" << endl;
         cout << "请输入选项: ";
         cin >> choice;
+        cin.ignore();
         switch (choice) {
         case 1:
             printCourse(courseNode);
@@ -687,13 +690,14 @@ void teacherMenu(Teacher* teacher, CourseNode* root) {
             cout << "现有学生:" << endl;
             printStudentIds(courseNode->data->courseStudentNode);
             cout << "请输入学号: ";
-            cin >> studentId;
+            getline(cin, studentId);
             currentScore = queryCourseScore(courseNode, studentId);
             if (currentScore == 0) {
                 newScore = 0;
                 cout << "请输入新分数: ";
                 cin >> newScore;
-                    modifyStudentScore(courseNode, studentId, newScore);
+                cin.ignore();
+                modifyStudentScore(courseNode, studentId, newScore);
                 printCourse(courseNode);
             }
             else if (currentScore == -1) {
@@ -707,12 +711,13 @@ void teacherMenu(Teacher* teacher, CourseNode* root) {
             cout << "现有学生:" << endl;
             printStudentIds(courseNode->data->courseStudentNode);
             cout << "请输入学号: ";
-            cin >> studentId;
+            getline(cin, studentId);
             currentScore = queryCourseScore(courseNode, studentId);
             if (currentScore != 0) {
                 cout << "请输入新分数: ";
                 cin >> newScore;
-                    modifyStudentScore(courseNode, studentId, newScore);
+                cin.ignore();
+                modifyStudentScore(courseNode, studentId, newScore);
                 printCourse(courseNode);
             }
             else if (currentScore == -1) {
@@ -758,22 +763,24 @@ void adminMenu(CourseNode** rootPtr) {
         cout << "7. 退出登录" << endl;
         cout << "请输入选项: ";
         cin >> choice;
+        cin.ignore();
         switch (choice) {
         case 1: {
             cout << "请输入课程编号: ";
-            cin >> courseId;
+            getline(cin, courseId);
             cout << "请输入课程名: ";
-            cin >> courseName;
+            getline(cin, courseName);
             cout << "请输入课程学分: ";
             cin >> courseCredit;
+            cin.ignore();
             cout << "请输入教师编号: ";
-            cin >> teacherId;
+            getline(cin, teacherId);
             cout << "请输入教师密码: ";
-            cin >> teacherPassword;
+            getline(cin, teacherPassword);
             cout << "请输入上课时间: ";
-            cin >> courseTime;
+            getline(cin, courseTime);
             cout << "请输入上课地点: ";
-            cin >> courseLocation;
+            getline(cin, courseLocation);
             Teacher *teacher = createTeacher(teacherId, teacherPassword);
             Course *course = createCourse(courseId, courseName, courseCredit, teacher, courseTime, courseLocation);
             CourseNode *courseNode = createCourseNode(course);
@@ -786,7 +793,7 @@ void adminMenu(CourseNode** rootPtr) {
             cout << "现有课程:" << endl;
             printCourseIds(root);
             cout << "请输入课程编号: ";
-            cin >> courseId;
+            getline(cin, courseId);
             courseNode = searchCourse(root, courseId);
             if (courseNode != NULL) {
                 int attrChoice;
@@ -801,10 +808,11 @@ void adminMenu(CourseNode** rootPtr) {
                 cout << "7. 上课地点" << endl;
                 cout << "请输入选项: ";
                 cin >> attrChoice;
+                cin.ignore();
                 switch (attrChoice) {
                 case 1: {
                     cout << "请输入新课程编号: ";
-                    cin >> courseId;
+                    getline(cin, courseId);
                     Teacher *teacher = createTeacher(courseNode->data->teacher->id, courseNode->data->teacher->password);
                     Course *course = createCourse(courseId, courseNode->data->name, courseNode->data->credit, teacher, courseNode->data->time, courseNode->data->location);
                     CourseNode *newCourseNode = createCourseNode(course);
@@ -820,32 +828,33 @@ void adminMenu(CourseNode** rootPtr) {
                 }
                 case 2:
                     cout << "请输入新课程名: ";
-                    cin >> courseName;
+                    getline(cin, courseName);
                     courseNode->data->name = courseName;
                     break;
                 case 3:
                     cout << "请输入新课程学分: ";
                     cin >> courseCredit;
+                    cin.ignore();
                     courseNode->data->credit = courseCredit;
                     break;
                 case 4:
                     cout << "请输入新教师编号: ";
-                    cin >> teacherId;
+                    getline(cin, teacherId);
                     courseNode->data->teacher->id = teacherId;
                     break;
                 case 5:
                     cout << "请输入新教师密码: ";
-                    cin >> teacherPassword;
+                    getline(cin, teacherPassword);
                     courseNode->data->teacher->password = teacherPassword;
                     break;
                 case 6:
                     cout << "请输入新上课时间: ";
-                    cin >> courseTime;
+                    getline(cin, courseTime);
                     courseNode->data->time = courseTime;
                     break;
                 case 7:
                     cout << "请输入新上课地点: ";
-                    cin >> courseLocation;
+                    getline(cin, courseLocation);
                     courseNode->data->location = courseLocation;
                     break;
                 default:
@@ -862,7 +871,7 @@ void adminMenu(CourseNode** rootPtr) {
             cout << "现有课程:" << endl;
             printCourseIds(root);
             cout << "请输入课程编号: ";
-            cin >> courseId;
+            getline(cin, courseId);
             deleteCourseNode(rootPtr, courseId);
             printCourses(root);
             break;
@@ -873,7 +882,7 @@ void adminMenu(CourseNode** rootPtr) {
             cout << "现有课程:" << endl;
             printCourseIds(root);
             cout << "请输入课程编号: ";
-            cin >> courseId;
+            getline(cin, courseId);
             courseNode = searchCourse(root, courseId);
             if (courseNode != NULL) {
                 cout << "课程 " << courseId << " 中的学生总数 " << countCourseStudents(courseNode) << endl;
@@ -908,6 +917,7 @@ void loginMenu(CourseNode* courseNode, StudentNode* studentNode) {
         cout << "4. 退出" << endl;
         cout << "请输入选项: ";
         cin >> choice;
+        cin.ignore();
         switch (choice) {
         case 1:
             student = studentLogin(studentNode);
